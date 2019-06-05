@@ -25,6 +25,7 @@
             <groupId>org.jooby</groupId>
             <artifactId>jooby-netty</artifactId>
             <version>1.6.1</version>
+            <optional>true</optional>
         </dependency>
 
         <dependency>

@@ -6,20 +6,25 @@ Adds Merkle-tree functionality to a Subversion install
 
 Limitations:
 
-* MOD_DAV/Apache only (not the binary protocol)
-* Subversion doesn't know anything about this:
-  * The endoints for this are outside Subversion's understanding
+* MOD_DAV/Apache only - not the binary Subversion (svn://) protocol
+* Subversion does not know anything about:
+  * The endpoints for this are outside Subversion's understanding
   * History of the Merkle tree changed are not retained
   
 # How it works.
 
 When it receives a GET to /foo/bar/baz/.merkle this service handles the request and issues a number of 
-PROPFIND an OPTIONS (WebDAV) operations to Subversion via Apache and MOD_DAV_SVN. Then it caches the the result
-and send it to the requester. Depending on the client library and how out of date the tree is, the GET request could 
-timeout. The backend would contiue calculating the tree, and a subsequent GET request for the same URL would
-be quicker.
+PROPFIND an OPTIONS (WebDAV) operations to Subversion via Apache and MOD_DAV_SVN. The SvnMerkleizer tech
+does a depth first traversal of the director tree working out where its SHA1 directory hash is out of 
+date and needs recalculating.
 
-Obviously that's a bunch of IO that makes it all imperfect.  This can be mitigated by movin the SvnMerkleizer service
+Then it caches all results for directories and sends the specific result sought back to the requester. 
+Depending on the client library and how out of date the tree is, the GET request could 
+timeout. The backend would continue calculating the tree, and a subsequent GET request for the same URL would
+be quicker in practice. It is possible that you could GET the root diretory's SHA1 with a cron job to keep it 
+fresh ahead of need.
+
+Obviously that's a bunch of IO that makes it all imperfect.  This can be mitigated by moving the SvnMerkleizer service
 closet in terms of TCP/IP to the Apache/Subversion machine(s). I have a Docker image that is Apache, Subversion and the 
 SvnMerkleizer service in one image. That's unorthodox as you're supposed to have a single process(*) in a docker
 container, to allow smooth stutdown and restarts.
@@ -71,6 +76,36 @@ differences you're perhaps seeing an incompatibility. I've blogged about TCKs fo
 The same tests are run for `RecordedSubversionServiceTests` and `PlayedBackSubversionServiceTests`. For that
 matter, the same tests are run for `DirectServiceTests` and for that test class, there's no use of Servirtium 
 at all.
+    
+## Running it    
+
+In Maven terms depend on SvnMerkleizer 
+
+```
+<dependency>
+    <groupId>com.paulhammant.svnmerkleizer</groupId>
+    <artifactId>svnmerkleizer-service</artifactId>
+    <version>1.0-SNAPSHOT</version>
+</dependency>    
+```
+
+And one of three HTTP servers abstracted by the excellent Jooby:
+
+```
+<dependency>
+    <groupId>org.jooby</groupId>
+    <artifactId>jooby-netty</artifactId>
+    <!-- 
+      Two alternates:
+    <artifactId>jooby-jetty</artifactId>
+    <artifactId>jooby-undertow</artifactId>
+                                        -->
+    <version>1.6.1</version>
+    <optional>true</optional>
+</dependency>
+```
+
+Then pick one of the ways of [booting it](https://github.com/paul-hammant/SvnMerkleizer/tree/master/src/main/java/com/paulhammant/svnmerkleizer/boot) :         
     
 ## License
 
