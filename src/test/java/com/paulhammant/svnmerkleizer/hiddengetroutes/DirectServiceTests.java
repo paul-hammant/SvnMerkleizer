@@ -32,10 +32,9 @@
 package com.paulhammant.svnmerkleizer.hiddengetroutes;
 
 import com.paulhammant.servirtium.InteractionMonitor;
-import com.paulhammant.svnmerkleizer.GetCentricMerkleizedSubversionDirectoriesExtendedForTesting;
 import com.paulhammant.svnmerkleizer.SvnMerkleizer;
+import com.paulhammant.svnmerkleizer.TestExtendedSubversionDirectoryMerkleizerService;
 import com.paulhammant.svnmerkleizer.TestMethods;
-import com.paulhammant.svnmerkleizer.TestingSubversionDirectoryMerkleizerService;
 import org.assertj.core.api.Assertions;
 import org.hamcrest.Matchers;
 import org.junit.*;
@@ -56,7 +55,7 @@ public class DirectServiceTests {
 
     private static final int PORT = 8080;
     private InteractionMonitor interactionMonitor = new InteractionMonitor.NullObject();
-    private TestingSubversionDirectoryMerkleizerService merkleizerService;
+    private TestExtendedSubversionDirectoryMerkleizerService.TestingSubversionDirectoryMerkleizerService merkleizerService;
 
     private List<Long> durationJournal;
     private List<SvnMerkleizer.Counts> countsJournal;
@@ -71,7 +70,7 @@ public class DirectServiceTests {
             countsJournal.add(counts);
         };
         new File("merkleizer.db").delete();
-        merkleizerService = new GetCentricMerkleizedSubversionDirectoriesExtendedForTesting(
+        merkleizerService = new TestExtendedSubversionDirectoryMerkleizerService.SubversionDirectoryMerkleizerServiceViaHiddenGetRoutes(
                 "http://localhost:8098/svn/dataset/", "abc123", metrics,
                 new HashMap<>(), PORT);
         long start = System.currentTimeMillis();

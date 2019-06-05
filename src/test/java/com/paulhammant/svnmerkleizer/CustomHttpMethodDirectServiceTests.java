@@ -43,16 +43,16 @@ import static org.assertj.core.api.Assertions.fail;
 import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.Matchers.equalToIgnoringWhiteSpace;
 
-public class HttpVerbDirectServiceTests {
+public class CustomHttpMethodDirectServiceTests {
 
-    private TestingSubversionDirectoryMerkleizerService merkleizerService;
+    private TestExtendedSubversionDirectoryMerkleizerService.TestingSubversionDirectoryMerkleizerService merkleizerService;
     private ServirtiumServer servirtiumServer = new ServirtiumServer.NullObject();
     private InteractionMonitor interactionMonitor = new InteractionMonitor.NullObject();
 
     @Before
     public void setup() {
         new File("merkleizer.db").delete();
-        merkleizerService = new CustomMethodOnDirectoryMerkleizedSubversionDirectoriesExtendedForTesting();
+        merkleizerService = new TestExtendedSubversionDirectoryMerkleizerService.SubversionDirectoryMerkleizerServiceViaCustomMethodOnDirectory();
         startTestApp();
     }
 

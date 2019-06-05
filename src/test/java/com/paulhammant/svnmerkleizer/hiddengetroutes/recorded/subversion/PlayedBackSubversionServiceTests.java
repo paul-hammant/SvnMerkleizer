@@ -34,10 +34,9 @@ package com.paulhammant.svnmerkleizer.hiddengetroutes.recorded.subversion;
 import com.paulhammant.servirtium.*;
 import com.paulhammant.servirtium.jetty.JettyServirtiumServer;
 import com.paulhammant.servirtium.svn.SubversionInteractionManipulations;
-import com.paulhammant.svnmerkleizer.GetCentricMerkleizedSubversionDirectoriesExtendedForTesting;
 import com.paulhammant.svnmerkleizer.SvnMerkleizer;
+import com.paulhammant.svnmerkleizer.TestExtendedSubversionDirectoryMerkleizerService;
 import com.paulhammant.svnmerkleizer.TestMethods;
-import com.paulhammant.svnmerkleizer.TestingSubversionDirectoryMerkleizerService;
 import org.assertj.core.api.Assertions;
 import org.hamcrest.Matchers;
 import org.junit.*;
@@ -59,7 +58,7 @@ public class PlayedBackSubversionServiceTests {
     private ServirtiumServer servirtiumServer;
     private InteractionMonitor interactionMonitor;
 
-    private TestingSubversionDirectoryMerkleizerService merkleizerService;
+    private TestExtendedSubversionDirectoryMerkleizerService.TestingSubversionDirectoryMerkleizerService merkleizerService;
 
     private List<Long> durationJournal = new ArrayList<>();
     private List<SvnMerkleizer.Counts> countsJournal = new ArrayList<>();
@@ -98,7 +97,7 @@ public class PlayedBackSubversionServiceTests {
                 manipulations, interactionMonitor);
         servirtiumServer.start();
         new File("merkleizer.db").delete();
-        merkleizerService = new GetCentricMerkleizedSubversionDirectoriesExtendedForTesting(
+        merkleizerService = new TestExtendedSubversionDirectoryMerkleizerService.SubversionDirectoryMerkleizerServiceViaHiddenGetRoutes(
                 "http://localhost:8198/abc123/", "abc123", metrics,
                 new HashMap<>(), 9080);
         long start = System.currentTimeMillis();
@@ -124,7 +123,7 @@ public class PlayedBackSubversionServiceTests {
     @Test
     public void itHasABunchOfFunctionsUsingPreemptiveAuthenticationHandling() throws IOException {
 
-        testName("itHasABunchOfFunctionsUsingPreemptiveAuthenticationHandling_recorded_Subversion", servirtiumServer, interactionMonitor);
+        testName("subversion/itHasABunchOfFunctionsUsingPreemptiveAuthenticationHandling", servirtiumServer, interactionMonitor);
 
         TestMethods.itHasABunchOfFunctionsUsingPreemptiveAuthenticationHandling(interactionMonitor, PORT);
     }
@@ -132,7 +131,7 @@ public class PlayedBackSubversionServiceTests {
     @Test
     public void itHasABunchOfFunctionsWithoutPreemptiveAuthenticationHandling() throws IOException {
 
-        testName("itHasABunchOfFunctionsWithoutPreemptiveAuthenticationHandling_recorded_Subversion", servirtiumServer, interactionMonitor);
+        testName("subversion/itHasABunchOfFunctionsWithoutPreemptiveAuthenticationHandling", servirtiumServer, interactionMonitor);
 
         TestMethods.itHasABunchOfFunctionsWithoutPreemptiveAuthenticationHandling(interactionMonitor, PORT);
     }
@@ -140,7 +139,7 @@ public class PlayedBackSubversionServiceTests {
     @Test
     public void theMerkleTreeShouldBeAbleToTrackChangesToSubversionBetweenGets() throws IOException {
 
-        testName("theMerkleTreeShouldBeAbleToTrackChangesToSubversionBetweenGets_recorded_Subversion", servirtiumServer, interactionMonitor);
+        testName("subversion/theMerkleTreeShouldBeAbleToTrackChangesToSubversionBetweenGets", servirtiumServer, interactionMonitor);
 
         merkleizerService.deleteCacheKeys();
 
@@ -206,7 +205,7 @@ public class PlayedBackSubversionServiceTests {
     @Test
     public void theMerkleTreeShouldBeAbleToTrackChangesToSubversionBetweenGetsForAlternateAuthz() throws IOException {
 
-        testName("theMerkleTreeShouldBeAbleToTrackChangesToSubversionBetweenGetsForAlternateAuthz_recorded_Subversion", servirtiumServer, interactionMonitor);
+        testName("subversion/theMerkleTreeShouldBeAbleToTrackChangesToSubversionBetweenGetsForAlternateAuthz", servirtiumServer, interactionMonitor);
 
         merkleizerService.deleteCacheKeys();
 
