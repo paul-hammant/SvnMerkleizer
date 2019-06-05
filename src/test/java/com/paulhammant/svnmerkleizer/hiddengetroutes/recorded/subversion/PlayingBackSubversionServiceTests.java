@@ -52,7 +52,7 @@ import static org.assertj.core.api.Assertions.fail;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.junit.Assert.assertEquals;
 
-public class PlayedBackSubversionServiceTests {
+public class PlayingBackSubversionServiceTests {
 
     static final int PORT = 9080;
     private ServirtiumServer servirtiumServer;

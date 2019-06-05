@@ -52,7 +52,7 @@ import static org.assertj.core.api.Assertions.fail;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.junit.Assert.assertEquals;
 
-public class RecordedSubversionServiceTests {
+public class RecordingSubversionServiceTests {
 
     /*
 
