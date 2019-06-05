@@ -51,19 +51,13 @@ import static com.paulhammant.svnmerkleizer.NullNettyInternalLoggerFactory.noLog
 public abstract class SubversionDirectoryMerkleizerService extends Jooby {
 
     private SvnMerkleizer svnMerkleizer;
-    private final String delegateToUrl;
-    private final String contextDir;
 
     static {
         noLoggingForNettyPlease();
     }
 
-    private final SvnMerkleizer.Metrics metrics;
 
     public SubversionDirectoryMerkleizerService(String delegateToUrl, String contextDir, SvnMerkleizer.Metrics metrics, SvnMerkleizer svnMerkleizer) {
-        this.delegateToUrl = delegateToUrl;
-        this.contextDir = contextDir;
-        this.metrics = metrics;
         this.svnMerkleizer = svnMerkleizer;
 
         /* Jooby's own 404 spits out stack trace, which can be silenced this way */
