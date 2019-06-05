@@ -137,9 +137,9 @@ public class PlayedBackSubversionServiceTests {
     }
 
     @Test
-    public void theMerkleTreeShouldBeAbleToTrackChangesToSubversionBetweenGets() throws IOException {
+    public void theMerkleTreeShouldBeAbleToTrackChangesToSubversionBetweenRequests() throws IOException {
 
-        testName("subversion/theMerkleTreeShouldBeAbleToTrackChangesToSubversionBetweenGets", servirtiumServer, interactionMonitor);
+        testName("subversion/theMerkleTreeShouldBeAbleToTrackChangesToSubversionBetweenRequests", servirtiumServer, interactionMonitor);
 
         merkleizerService.deleteCacheKeys();
 
@@ -203,9 +203,9 @@ public class PlayedBackSubversionServiceTests {
     }
 
     @Test
-    public void theMerkleTreeShouldBeAbleToTrackChangesToSubversionBetweenGetsForAlternateAuthz() throws IOException {
+    public void theMerkleTreeShouldBeAbleToTrackChangesToSubversionBetweenRequestsForAlternateAuthz() throws IOException {
 
-        testName("subversion/theMerkleTreeShouldBeAbleToTrackChangesToSubversionBetweenGetsForAlternateAuthz", servirtiumServer, interactionMonitor);
+        testName("subversion/theMerkleTreeShouldBeAbleToTrackChangesToSubversionBetweenRequestsForAlternateAuthz", servirtiumServer, interactionMonitor);
 
         merkleizerService.deleteCacheKeys();
 

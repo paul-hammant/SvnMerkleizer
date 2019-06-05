@@ -115,7 +115,7 @@ public class DirectServiceTests {
     }
 
     @Test
-    public void theMerkleTreeShouldBeAbleToTrackChangesToSubversionBetweenGets() throws IOException {
+    public void theMerkleTreeShouldBeAbleToTrackChangesToSubversionBetweenRequests() throws IOException {
 
         getAndCheckHarrysRootCsv(PORT); // fills cache (if it was not filled already)
         merkleizerService.setCacheItemsToRev1AsIfThatWereRealityInTheSvnRepo(); // pretends they're all rev #1 in the cache
@@ -152,7 +152,7 @@ public class DirectServiceTests {
     }
 
     @Test
-    public void theMerkleTreeShouldBeAbleToTrackChangesToSubversionBetweenGetsForAlternateAuthz() throws IOException {
+    public void theMerkleTreeShouldBeAbleToTrackChangesToSubversionBetweenRequestsForAlternateAuthz() throws IOException {
 
         merkleizerService.deleteCacheKeys();
 
