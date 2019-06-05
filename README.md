@@ -48,7 +48,7 @@ to stand up a testing instance of Subversion. I have a handy Docker solution for
 
 ## Servirtium usage
 
-Within SvnMerkleizer build, there is a use of "Servirtium" to allow playback of the previously recorded 
+Within SvnMerkleizer build, there is a use of [Servirtium](https://github.com/paul-hammant/servirtium) to allow playback of the previously recorded 
 `svnmerkleizer-test-repo` interactions. This means you don't have to launch the latter with Docker. To see integration 
 tests run with Servirtium emulating Subversion + MOD_DAV_SVN + Apache, do:
 
@@ -56,7 +56,7 @@ tests run with Servirtium emulating Subversion + MOD_DAV_SVN + Apache, do:
 mvn install -Dtest=PlayedBackSubversionServiceTests
 ```
    
-The recorded conversations are stored (src/test/mocks - TODO)[]   
+The recorded conversations are stored [src/test/mocks/subversion](https://github.com/paul-hammant/SvnMerkleizer/tree/master/src/test/mocks/subversion)   
    
 If you have `svnmerkleizer-test-repo` running per it's instructions, you can re-record the interactions for the same 
 service test: 
@@ -72,7 +72,7 @@ The same tests are run for `RecordedSubversionServiceTests` and `PlayedBackSubve
 matter, the same tests are run for `DirectServiceTests` and for that test class, there's no use of Servirtium 
 at all.
     
-## License & Legal warning
+## License
 
 BSD 2-Clause license (open source).
     
