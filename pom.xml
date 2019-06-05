@@ -7,7 +7,10 @@
         <version>9</version>
     </parent>
 
+    <groupId>com.paulhammant.svnmerkleizer</groupId>
     <artifactId>svnmerkleizer-service</artifactId>
+    <version>1.0-SNAPSHOT</version>
+    <packaging>jar</packaging>
 
     <name>Subversion Merkelizer Service</name>
 
