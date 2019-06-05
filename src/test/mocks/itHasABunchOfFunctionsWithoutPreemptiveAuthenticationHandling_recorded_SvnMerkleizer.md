@@ -7,12 +7,11 @@
 ### Request headers recorded for playback:
 
 ```
-Connection: keep-alive
-User-Agent: SVN/1.10.0 (x86_64-apple-darwin17.0.0) serf/1.3.9
-Host: localhost:8080
 Accept-Encoding: gzip,deflate
 Accept: */*
-Content-Length: 0
+Connection: keep-alive
+Host: localhost:8080
+User-Agent: SVN/1.10.0 (x86_64-apple-darwin17.0.0) serf/1.3.9
 ```
 
 ### Request body recorded for playback ():
@@ -43,12 +42,11 @@ content-length: 0
 ### Request headers recorded for playback:
 
 ```
-Connection: keep-alive
-User-Agent: SVN/1.10.0 (x86_64-apple-darwin17.0.0) serf/1.3.9
-Host: localhost:8080
 Accept-Encoding: gzip,deflate
 Accept: */*
-Content-Length: 0
+Connection: keep-alive
+Host: localhost:8080
+User-Agent: SVN/1.10.0 (x86_64-apple-darwin17.0.0) serf/1.3.9
 ```
 
 ### Request body recorded for playback ():
@@ -75,13 +73,12 @@ content-length: 0
 ### Request headers recorded for playback:
 
 ```
-Authorization: Basic aGFycnk6aGFycnlwdw==
-Accept: */*
-Connection: keep-alive
-User-Agent: SVN/1.10.0 (x86_64-apple-darwin17.0.0) serf/1.3.9
-Host: localhost:8080
 Accept-Encoding: gzip,deflate
-Content-Length: 0
+Accept: */*
+Authorization: Basic aGFycnk6aGFycnlwdw==
+Connection: keep-alive
+Host: localhost:8080
+User-Agent: SVN/1.10.0 (x86_64-apple-darwin17.0.0) serf/1.3.9
 ```
 
 ### Request body recorded for playback ():
@@ -94,8 +91,8 @@ Content-Length: 0
 
 ```
 Content-Type: text/csv;charset=UTF-8
-content-length: 136
 connection: keep-alive
+content-length: 136
 ```
 
 ### Response body recorded for playback (200: text/csv;charset=UTF-8):

@@ -7,13 +7,12 @@
 ### Request headers recorded for playback:
 
 ```
-Authorization: Basic aGFycnk6aGFycnlwdw==
-Accept: */*
-Connection: keep-alive
-User-Agent: SVN/1.10.0 (x86_64-apple-darwin17.0.0) serf/1.3.9
-Host: localhost:8080
 Accept-Encoding: gzip,deflate
-Content-Length: 0
+Accept: */*
+Authorization: Basic aGFycnk6aGFycnlwdw==
+Connection: keep-alive
+Host: localhost:8080
+User-Agent: SVN/1.10.0 (x86_64-apple-darwin17.0.0) serf/1.3.9
 ```
 
 ### Request body recorded for playback ():
@@ -26,8 +25,8 @@ Content-Length: 0
 
 ```
 Content-Type: text/csv;charset=UTF-8
-content-length: 136
 connection: keep-alive
+content-length: 136
 ```
 
 ### Response body recorded for playback (200: text/csv;charset=UTF-8):
@@ -47,13 +46,12 @@ hello.txt,f572d396fae9206628714fb2ce00f72e94f2258f
 ### Request headers recorded for playback:
 
 ```
-Authorization: Basic aGFycnk6aGFycnlwdw==
-Accept: */*
-Connection: keep-alive
-User-Agent: SVN/1.10.0 (x86_64-apple-darwin17.0.0) serf/1.3.9
-Host: localhost:8080
 Accept-Encoding: gzip,deflate
-Content-Length: 0
+Accept: */*
+Authorization: Basic aGFycnk6aGFycnlwdw==
+Connection: keep-alive
+Host: localhost:8080
+User-Agent: SVN/1.10.0 (x86_64-apple-darwin17.0.0) serf/1.3.9
 ```
 
 ### Request body recorded for playback ():
@@ -66,8 +64,8 @@ Content-Length: 0
 
 ```
 Content-Type: text/plain;charset=UTF-8
-content-length: 135
 connection: keep-alive
+content-length: 135
 ```
 
 ### Response body recorded for playback (200: text/plain;charset=UTF-8):
@@ -87,13 +85,12 @@ hello.txt f572d396fae9206628714fb2ce00f72e94f2258f
 ### Request headers recorded for playback:
 
 ```
-Authorization: Basic aGFycnlwdzpzZGZzZGZld2Vyd2Vyd2Vyd2U=
-Accept: */*
-Connection: keep-alive
-User-Agent: SVN/1.10.0 (x86_64-apple-darwin17.0.0) serf/1.3.9
-Host: localhost:8080
 Accept-Encoding: gzip,deflate
-Content-Length: 0
+Accept: */*
+Authorization: Basic aGFycnlwdzpzZGZzZGZld2Vyd2Vyd2Vyd2U=
+Connection: keep-alive
+Host: localhost:8080
+User-Agent: SVN/1.10.0 (x86_64-apple-darwin17.0.0) serf/1.3.9
 ```
 
 ### Request body recorded for playback ():
@@ -124,13 +121,12 @@ content-length: 0
 ### Request headers recorded for playback:
 
 ```
-Authorization: Basic aGFycnk6aGFycnlwdw==
-Accept: */*
-Connection: keep-alive
-User-Agent: SVN/1.10.0 (x86_64-apple-darwin17.0.0) serf/1.3.9
-Host: localhost:8080
 Accept-Encoding: gzip,deflate
-Content-Length: 0
+Accept: */*
+Authorization: Basic aGFycnk6aGFycnlwdw==
+Connection: keep-alive
+Host: localhost:8080
+User-Agent: SVN/1.10.0 (x86_64-apple-darwin17.0.0) serf/1.3.9
 ```
 
 ### Request body recorded for playback ():
@@ -143,8 +139,8 @@ Content-Length: 0
 
 ```
 Content-Type: text/xml;charset=UTF-8
-content-length: 282
 connection: keep-alive
+content-length: 282
 ```
 
 ### Response body recorded for playback (200: text/xml;charset=UTF-8):
@@ -172,13 +168,12 @@ connection: keep-alive
 ### Request headers recorded for playback:
 
 ```
-Authorization: Basic aGFycnk6aGFycnlwdw==
-Accept: */*
-Connection: keep-alive
-User-Agent: SVN/1.10.0 (x86_64-apple-darwin17.0.0) serf/1.3.9
-Host: localhost:8080
 Accept-Encoding: gzip,deflate
-Content-Length: 0
+Accept: */*
+Authorization: Basic aGFycnk6aGFycnlwdw==
+Connection: keep-alive
+Host: localhost:8080
+User-Agent: SVN/1.10.0 (x86_64-apple-darwin17.0.0) serf/1.3.9
 ```
 
 ### Request body recorded for playback ():
@@ -191,8 +186,8 @@ Content-Length: 0
 
 ```
 Content-Type: text/html;charset=UTF-8
-content-length: 266
 connection: keep-alive
+content-length: 266
 ```
 
 ### Response body recorded for playback (200: text/html;charset=UTF-8):
@@ -215,13 +210,12 @@ bogus URL results in 404 response
 ### Request headers recorded for playback:
 
 ```
-Authorization: Basic aGFycnk6aGFycnlwdw==
-Accept: */*
-Connection: keep-alive
-User-Agent: SVN/1.10.0 (x86_64-apple-darwin17.0.0) serf/1.3.9
-Host: localhost:8080
 Accept-Encoding: gzip,deflate
-Content-Length: 0
+Accept: */*
+Authorization: Basic aGFycnk6aGFycnlwdw==
+Connection: keep-alive
+Host: localhost:8080
+User-Agent: SVN/1.10.0 (x86_64-apple-darwin17.0.0) serf/1.3.9
 ```
 
 ### Request body recorded for playback ():
@@ -251,13 +245,12 @@ another bogus URL results in 404 response
 ### Request headers recorded for playback:
 
 ```
-Authorization: Basic aGFycnk6aGFycnlwdw==
-Accept: */*
-Connection: keep-alive
-User-Agent: SVN/1.10.0 (x86_64-apple-darwin17.0.0) serf/1.3.9
-Host: localhost:8080
 Accept-Encoding: gzip,deflate
-Content-Length: 0
+Accept: */*
+Authorization: Basic aGFycnk6aGFycnlwdw==
+Connection: keep-alive
+Host: localhost:8080
+User-Agent: SVN/1.10.0 (x86_64-apple-darwin17.0.0) serf/1.3.9
 ```
 
 ### Request body recorded for playback ():
@@ -271,8 +264,8 @@ Content-Length: 0
 ```
 Cache-Control: must-revalidate,no-cache,no-store
 Content-Type: text/html;charset=UTF-8
-content-length: 0
 connection: keep-alive
+content-length: 0
 ```
 
 ### Response body recorded for playback (404: text/html;charset=UTF-8):
@@ -290,13 +283,12 @@ connection: keep-alive
 ### Request headers recorded for playback:
 
 ```
-Authorization: Basic aGFycnk6aGFycnlwdw==
-Accept: */*
-Connection: keep-alive
-User-Agent: SVN/1.10.0 (x86_64-apple-darwin17.0.0) serf/1.3.9
-Host: localhost:8080
 Accept-Encoding: gzip,deflate
-Content-Length: 0
+Accept: */*
+Authorization: Basic aGFycnk6aGFycnlwdw==
+Connection: keep-alive
+Host: localhost:8080
+User-Agent: SVN/1.10.0 (x86_64-apple-darwin17.0.0) serf/1.3.9
 ```
 
 ### Request body recorded for playback ():
@@ -309,8 +301,8 @@ Content-Length: 0
 
 ```
 Content-Type: application/json;charset=UTF-8
-content-length: 245
 connection: keep-alive
+content-length: 245
 ```
 
 ### Response body recorded for playback (200: application/json;charset=UTF-8):

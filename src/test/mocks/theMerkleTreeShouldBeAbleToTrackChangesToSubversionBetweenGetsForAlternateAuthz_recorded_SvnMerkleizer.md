@@ -8,13 +8,12 @@ Manipulate the tree and force cache-hits to show some efficiency
 ### Request headers recorded for playback:
 
 ```
-Authorization: Basic c2FsbHk6c2FsbHlwdw==
-Accept: */*
-Connection: keep-alive
-User-Agent: SVN/1.10.0 (x86_64-apple-darwin17.0.0) serf/1.3.9
-Host: localhost:8080
 Accept-Encoding: gzip,deflate
-Content-Length: 0
+Accept: */*
+Authorization: Basic c2FsbHk6c2FsbHlwdw==
+Connection: keep-alive
+Host: localhost:8080
+User-Agent: SVN/1.10.0 (x86_64-apple-darwin17.0.0) serf/1.3.9
 ```
 
 ### Request body recorded for playback ():
@@ -27,8 +26,8 @@ Content-Length: 0
 
 ```
 Content-Type: text/plain;charset=UTF-8
-content-length: 172
 connection: keep-alive
+content-length: 172
 ```
 
 ### Response body recorded for playback (200: text/plain;charset=UTF-8):
@@ -45,13 +44,12 @@ W/ 430412a9806ac466e3543aa80fd3c3a59afea686
 ### Request headers recorded for playback:
 
 ```
-Authorization: Basic c2FsbHk6c2FsbHlwdw==
-Accept: */*
-Connection: keep-alive
-User-Agent: SVN/1.10.0 (x86_64-apple-darwin17.0.0) serf/1.3.9
-Host: localhost:8080
 Accept-Encoding: gzip,deflate
-Content-Length: 0
+Accept: */*
+Authorization: Basic c2FsbHk6c2FsbHlwdw==
+Connection: keep-alive
+Host: localhost:8080
+User-Agent: SVN/1.10.0 (x86_64-apple-darwin17.0.0) serf/1.3.9
 ```
 
 ### Request body recorded for playback ():
@@ -64,8 +62,8 @@ Content-Length: 0
 
 ```
 Content-Type: text/plain;charset=UTF-8
-content-length: 172
 connection: keep-alive
+content-length: 172
 ```
 
 ### Response body recorded for playback (200: text/plain;charset=UTF-8):

@@ -125,7 +125,8 @@ public class T1_RecordedSvnMerkleizerServiceTests {
     @Before
     public void setup() throws Exception {
         InteractionManipulations manipulations = new SubversionInteractionManipulations("localhost:8100", "localhost:8080");
-        interactionMonitor = new MarkdownRecorder(new ServiceInteropViaOkHttp().withReadTimeout(130), manipulations);
+        interactionMonitor = new MarkdownRecorder(new ServiceInteropViaOkHttp().withReadTimeout(130), manipulations)
+                .withAlphaSortingOfHeaders();
         servirtiumServer = new JettyServirtiumServer(new ServiceMonitor.Default(), 8100, manipulations, interactionMonitor);
         servirtiumServer.start();
 

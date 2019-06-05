@@ -84,7 +84,8 @@ public class T2_PlayedBackSvnMerkleizerServiceTests {
     @Before
     public void setup() throws Exception {
         InteractionManipulations manipulations = new SubversionInteractionManipulations("localhost:8100", "localhost:8080");
-        interactionMonitor =new MarkdownReplayer(new MarkdownReplayer.ReplayMonitor.Default());
+        interactionMonitor =new MarkdownReplayer(new MarkdownReplayer.ReplayMonitor.Default())
+                .withAlphaSortingOfHeaders();
         servirtiumServer = new JettyServirtiumServer(new ServiceMonitor.Default(), PORT, manipulations, interactionMonitor);
         servirtiumServer.start();
 
