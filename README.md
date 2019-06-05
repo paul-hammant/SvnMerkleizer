@@ -72,6 +72,10 @@ The same tests are run for `RecordedSubversionServiceTests` and `PlayedBackSubve
 matter, the same tests are run for `DirectServiceTests` and for that test class, there's no use of Servirtium 
 at all.
     
+## License & Legal warning
+
+BSD 2-Clause license (open source).
+    
 # Comparisons to "out of the box" Git
 
 Git breaths the SHA1 hashes of files, and changes. It is possible (if history has not been purged/rewritten) 
