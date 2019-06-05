@@ -50,7 +50,6 @@ import java.util.List;
 import static com.paulhammant.svnmerkleizer.TestMethods.*;
 import static com.paulhammant.svnmerkleizer.TestMethods.getAndCheckSallysRootTxt;
 import static org.assertj.core.api.Assertions.fail;
-import static org.hamcrest.MatcherAssert.assertThat;
 import static org.junit.Assert.assertEquals;
 
 public class T2_PlayedBackSvnMerkleizerServiceTests {
