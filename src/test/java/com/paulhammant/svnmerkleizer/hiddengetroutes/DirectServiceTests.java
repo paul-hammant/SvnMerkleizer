@@ -52,7 +52,7 @@ import static org.assertj.core.api.Assertions.fail;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.junit.Assert.assertEquals;
 
-public class T0_DirectServiceTests {
+public class DirectServiceTests {
 
     private static final int PORT = 8080;
     private InteractionMonitor interactionMonitor = new InteractionMonitor.NullObject();

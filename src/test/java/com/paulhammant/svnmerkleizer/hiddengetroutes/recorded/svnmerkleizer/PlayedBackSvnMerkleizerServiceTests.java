@@ -29,7 +29,7 @@
         either expressed or implied, of the Servirtium project.
 */
 
-package com.paulhammant.svnmerkleizer.hiddengetroutes;
+package com.paulhammant.svnmerkleizer.hiddengetroutes.recorded.svnmerkleizer;
 
 import com.paulhammant.servirtium.*;
 import com.paulhammant.servirtium.jetty.JettyServirtiumServer;
@@ -52,7 +52,7 @@ import static com.paulhammant.svnmerkleizer.TestMethods.getAndCheckSallysRootTxt
 import static org.assertj.core.api.Assertions.fail;
 import static org.junit.Assert.assertEquals;
 
-public class T2_PlayedBackSvnMerkleizerServiceTests {
+public class PlayedBackSvnMerkleizerServiceTests {
 
     private static final int PORT = 8100;
     private ServirtiumServer servirtiumServer;

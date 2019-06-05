@@ -29,7 +29,7 @@
         either expressed or implied, of the Servirtium project.
 */
 
-package com.paulhammant.svnmerkleizer.hiddengetroutes;
+package com.paulhammant.svnmerkleizer.hiddengetroutes.recorded.subversion;
 
 import com.paulhammant.servirtium.*;
 import com.paulhammant.servirtium.jetty.JettyServirtiumServer;
@@ -53,7 +53,7 @@ import static org.assertj.core.api.Assertions.fail;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.junit.Assert.assertEquals;
 
-public class T3_RecordedSubversionServiceTests {
+public class RecordedSubversionServiceTests {
 
     /*
 
