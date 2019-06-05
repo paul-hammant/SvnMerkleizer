@@ -53,7 +53,7 @@ Within SvnMerkleizer build, there is a use of "Servirtium" to allow playback of 
 tests run with Servirtium emulating Subversion + MOD_DAV_SVN + Apache, do:
 
 ```
-mvn install -Dtest=T4_PlayedBackSubversionServiceTests
+mvn install -Dtest=PlayedBackSubversionServiceTests
 ```
    
 The recorded conversations are stored (src/test/mocks - TODO)[]   
@@ -62,14 +62,14 @@ If you have `svnmerkleizer-test-repo` running per it's instructions, you can re-
 service test: 
 
 ```
-mvn install -Dtest=T3_RecordedSubversionServiceTests
+mvn install -Dtest=RecordedSubversionServiceTests
 ```
 
 This overwrites the pertinent markdown sources in `src/test/mocks`. If you then do `git diff` and there are any
 differences you're perhaps seeing an incompatibility. I've blogged about TCKs for the usefulness of that.
   
-The same tests are run for `T3_RecordedSubversionServiceTests`  and `T4_PlayedBackSubversionServiceTests`. For that
-matter, the same tests are run for `T0_DirectServiceTests` and for that test class, there's no use of Servirtium 
+The same tests are run for `RecordedSubversionServiceTests` and `PlayedBackSubversionServiceTests`. For that
+matter, the same tests are run for `DirectServiceTests` and for that test class, there's no use of Servirtium 
 at all.
     
 # Comparisons to "out of the box" Git
@@ -77,17 +77,17 @@ at all.
 Git breaths the SHA1 hashes of files, and changes. It is possible (if history has not been purged/rewritten) 
 to bring back a repo to exact same content represented by a commit hash. At any time, the correctness of Git's
 Merkle tree over content and meta data can be verified.  SvnMerkleizer is not holding history of the Merkle tree 
-(see Directions below). You could verify the entre merkle tree as you have it, but if the canonical server repo gets
+(see Directions below). You could verify the entire merkle tree as you have it, but if the canonical server repo gets
 updated, the only thing you know now about your client side 'checkout' is that the tree is out of date.
   
-Git isn't very good at large binaries or terrabytes of history though. You could say that Git-LFS delivers on the 
+Git isn't very good at large binaries or terabytes of history though. You could say that Git-LFS delivers on the 
 former, but I might like to see something more built-in.  Git also doesn't allow per-user or per-group read/write
 permissions for directories/files, whereas Subversion does. Perhaps Git will deliver on all of these in the fullness
 of time. Or a successor takes over that's not objectionable to the Git intelligentsia.  
   
 # Alternatives to SvnMerkleizer
 
-A better solution would be to have a Rust commit hook that recalulcated the merkle tree for the in-progress commit on 
+A better solution would be to have a Rust commit hook that recalculated the merkle tree for the in-progress commit on 
 the server, and wrote .merkle files to the pertinent directories, and included them in the commit itself. That'd could 
 force the committer to do a 'svn up' operation immediately following the commit, but that should be quick (and never 
 clash). I say could, because Subversion does not require to to be "up to date" with working copy before you commit, 
