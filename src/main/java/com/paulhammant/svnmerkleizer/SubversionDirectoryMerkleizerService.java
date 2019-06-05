@@ -56,8 +56,7 @@ public abstract class SubversionDirectoryMerkleizerService extends Jooby {
         noLoggingForNettyPlease();
     }
 
-
-    public SubversionDirectoryMerkleizerService(String delegateToUrl, String contextDir, SvnMerkleizer.Metrics metrics, SvnMerkleizer svnMerkleizer) {
+    public SubversionDirectoryMerkleizerService(SvnMerkleizer svnMerkleizer) {
         this.svnMerkleizer = svnMerkleizer;
 
         /* Jooby's own 404 spits out stack trace, which can be silenced this way */
@@ -69,7 +68,7 @@ public abstract class SubversionDirectoryMerkleizerService extends Jooby {
 
     }
 
-    public static String getAuthorization(Request req) {
+    private static String getAuthorization(Request req) {
         Mutant authorization = req.headers().get("Authorization");
         if (authorization != null) {
             return authorization.value();
@@ -138,7 +137,7 @@ public abstract class SubversionDirectoryMerkleizerService extends Jooby {
         svnMerkleizer.clearCache();
     }
 
-    public static XStream makePropfindXmlConverter() {
+    static XStream makePropfindXmlConverter() {
         XStream svnXmlConverter = new XStream();
         svnXmlConverter.allowTypesByWildcard(new String[] {
                 "com.paulhammant.svnmerkleizer.pojos.**"
@@ -147,7 +146,7 @@ public abstract class SubversionDirectoryMerkleizerService extends Jooby {
         return svnXmlConverter;
     }
 
-    public static XStream makeDirectoryXmlSerializer() {
+    static XStream makeDirectoryXmlSerializer() {
         XStream svnXmlConverter = new XStream();
         svnXmlConverter.allowTypesByWildcard(new String[] {
                 "com.paulhammant.svnmerkleizer.pojos.**"
@@ -159,7 +158,7 @@ public abstract class SubversionDirectoryMerkleizerService extends Jooby {
     public static class ViaCustomMethodOnDirectory extends SubversionDirectoryMerkleizerService {
 
         public ViaCustomMethodOnDirectory(String method, String delegateToUrl, String contextDir, String cacheFilePath, SvnMerkleizer.Metrics metrics, int port) {
-            super(delegateToUrl, contextDir, metrics, new SvnMerkleizer(delegateToUrl, contextDir, metrics, cacheFilePath));
+            super(new SvnMerkleizer(delegateToUrl, contextDir, metrics, cacheFilePath));
 
             OkHttpClient okHttpClient = new OkHttpClient();
             XStream svnXmlConverter = makePropfindXmlConverter();
@@ -203,22 +202,12 @@ public abstract class SubversionDirectoryMerkleizerService extends Jooby {
             }
         }
 
-        public static void main(String[] args) {
-            final String delegateTo = System.getProperty("SvnMerkleizerDelegateTo");
-            final String contextDir = System.getProperty("SvnMerkleizerContextDir");
-            final String cacheFilePath = System.getProperty("SvnMerkleizerCacheFilePath");
-            new ViaCustomMethodOnDirectory("MERKLE",
-                    delegateTo, contextDir, cacheFilePath,
-                    new SvnMerkleizer.Metrics.Console(),
-                    8080
-            ).start(args);
-        }
     }
 
     public static class ViaHiddenGetRoutes extends SubversionDirectoryMerkleizerService {
 
         public ViaHiddenGetRoutes(String delegateToUrl, String contextDir, SvnMerkleizer.Metrics metrics, SvnMerkleizer svnMerkleizer, int port) {
-            super(delegateToUrl, contextDir, metrics, svnMerkleizer);
+            super(svnMerkleizer);
 
             OkHttpClient okHttpClient = new OkHttpClient();
 //        Logger.getLogger(OkHttpClient.class.getName()).setLevel(Level.FINE);
@@ -252,16 +241,5 @@ public abstract class SubversionDirectoryMerkleizerService extends Jooby {
                 });
             });
         }
-
-        public static void main(String[] args) {
-            final SvnMerkleizer.Metrics.Console metrics1 = new SvnMerkleizer.Metrics.Console();
-            final String delegateTo = System.getProperty("SvnMerkleizerDelegateTo");
-            final String contextDir = System.getProperty("SvnMerkleizerContextDir");
-            final String cacheFilePath = System.getProperty("SvnMerkleizerCacheFilePath");
-            new ViaHiddenGetRoutes(delegateTo, contextDir, metrics1,
-                    new SvnMerkleizer(delegateTo, contextDir, metrics1, cacheFilePath), 8080
-            ).start(args);
-        }
     }
-
 }
