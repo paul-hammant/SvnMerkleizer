@@ -4,6 +4,6 @@
 *.iws
 target/
 log/
-cards.db
 merkleizer.db
 test_output.md
+dependency-reduced-pom.xml
