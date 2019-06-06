@@ -216,10 +216,10 @@ public abstract class SubversionDirectoryMerkleizerService extends Jooby {
 
             path(contextDir, () -> {
                 port(port);
-                before("**/*", (req, rsp) -> {
-                    String p = req.path();
-                    System.out.println(p);
-                });
+//                before("**/*", (req, rsp) -> {
+//                    String p = req.path();
+//                    System.out.println(p);
+//                });
                 get("**/.merkle.json", (req, rsp) -> {
                     json(okHttpClient, svnXmlConverter, req, rsp);
                 });
