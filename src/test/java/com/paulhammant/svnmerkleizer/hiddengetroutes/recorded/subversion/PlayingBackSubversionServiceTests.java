@@ -82,7 +82,7 @@ import static org.junit.Assert.assertEquals;
 
 public class PlayingBackSubversionServiceTests {
 
-    static final int PORT = 9080;
+    private static final int PORT = 9080;
     private ServirtiumServer servirtiumServer;
     private InteractionMonitor interactionMonitor;
 
