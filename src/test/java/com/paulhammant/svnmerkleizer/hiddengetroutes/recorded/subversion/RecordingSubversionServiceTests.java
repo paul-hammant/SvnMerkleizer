@@ -65,7 +65,7 @@ import static org.junit.Assert.assertEquals;
                     V
         +-------------------+
         |   SvnMerkleizer   |
-        |     Port 8080     |
+        |     Port 9080     |
         | (plus disk cache) |
         +-------------------+
                     |
@@ -74,7 +74,7 @@ import static org.junit.Assert.assertEquals;
                     V
              +------------+
              | Servirtium |   <- In record mode.
-             |  Port 8100 |      Recording to src/test/mocks/
+             |  Port 8198 |      Recording to src/test/mocks/
              +------------+
                       |
                       | HTTP Calls (OkHttp)
@@ -105,9 +105,7 @@ public class RecordingSubversionServiceTests {
 
     private List<Long> durationJournal;
     private List<SvnMerkleizer.Counts> countsJournal ;
-
     private SvnMerkleizer.Metrics metrics;
-
 
     private static void sleep(long start) {
         try {
@@ -142,16 +140,21 @@ public class RecordingSubversionServiceTests {
             }
         };
 
-        interactionMonitor = new MarkdownRecorder(new ServiceInteropViaOkHttp().withReadTimeout(130),
-                manipulations).withReplacementsInRecording("abc123", "svn/dataset");
-        servirtiumServer = new JettyServirtiumServer(new ServiceMonitor.Default(), 8198,
+        interactionMonitor = new MarkdownRecorder(
+                new ServiceInteropViaOkHttp().withReadTimeout(130),
+                manipulations)
+                .withReplacementsInRecording("abc123", "svn/dataset");
+
+        servirtiumServer = new JettyServirtiumServer(
+                new ServiceMonitor.Default(), 8198,
                 manipulations, interactionMonitor);
+
         servirtiumServer.start();
 
         new File("merkleizer.db").delete();
         merkleizerService = new TestExtendedSubversionDirectoryMerkleizerService.SubversionDirectoryMerkleizerServiceViaHiddenGetRoutes(
                 "http://localhost:8198/abc123/", "abc123", metrics,
-                new HashMap<>(), 9080);
+                new HashMap<>(), PORT);
         long start = System.currentTimeMillis();
         merkleizerService.start("server.join=false");
         while (!merkleizerService.appStarted()) {
