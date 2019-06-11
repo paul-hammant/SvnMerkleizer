@@ -34,7 +34,7 @@ Content-Type: text/xml; charset=UTF-8
 
 ```
 Date: Wed, 01 Jan 2019 01:01:01 GMT
-Server: Apache/2.4.29 (Unix)
+Server: Apache/2.4.39 (Unix)
 WWW-Authenticate: Basic realm="Subversion Repository"
 Content-Length: 456
 Keep-Alive: timeout=5, max=100
@@ -57,7 +57,7 @@ credentials (e.g., bad password), or your
 browser doesn't understand how to supply
 the credentials required.</p>
 <hr>
-<address>Apache/2.4.29 (Unix) Server at localhost Port 8198</address>
+<address>Apache/2.4.39 (Unix) Server at localhost Port 8198</address>
 </body></html>
 
 ```
@@ -98,7 +98,7 @@ Content-Type: text/xml; charset=UTF-8
 
 ```
 Date: Wed, 01 Jan 2019 01:01:01 GMT
-Server: Apache/2.4.29 (Unix)
+Server: Apache/2.4.39 (Unix)
 WWW-Authenticate: Basic realm="Subversion Repository"
 Content-Length: 456
 Keep-Alive: timeout=5, max=99
@@ -121,7 +121,7 @@ credentials (e.g., bad password), or your
 browser doesn't understand how to supply
 the credentials required.</p>
 <hr>
-<address>Apache/2.4.29 (Unix) Server at localhost Port 8198</address>
+<address>Apache/2.4.39 (Unix) Server at localhost Port 8198</address>
 </body></html>
 
 ```
@@ -159,7 +159,7 @@ Content-Type: text/xml; charset=UTF-8
 
 ```
 Date: Wed, 01 Jan 2019 01:01:01 GMT
-Server: Apache/2.4.29 (Unix)
+Server: Apache/2.4.39 (Unix)
 Content-Length: 1529
 Keep-Alive: timeout=5, max=98
 Connection: Keep-Alive
@@ -242,7 +242,7 @@ Content-Type: text/xml; charset=UTF-8
 
 ```
 Date: Wed, 01 Jan 2019 01:01:01 GMT
-Server: Apache/2.4.29 (Unix)
+Server: Apache/2.4.39 (Unix)
 DAV: 1,2
 DAV: version-control,checkout,working-resource
 DAV: merge,baseline,activity,version-controlled-collection
@@ -259,7 +259,7 @@ MS-Author-Via: DAV
 Allow: OPTIONS,GET,HEAD,POST,DELETE,TRACE,PROPFIND,PROPPATCH,COPY,MOVE,LOCK,UNLOCK,CHECKOUT
 DAV: http://subversion.tigris.org/xmlns/dav/svn/ephemeral-txnprops
 SVN-Youngest-Rev: 2
-SVN-Repository-UUID: f68861c9-3565-4bc9-8501-1873a7600b02
+SVN-Repository-UUID: 0c037904-30b1-4eb2-a8be-1dcc6c78b50d
 SVN-Repository-MergeInfo: yes
 DAV: http://subversion.tigris.org/xmlns/dav/svn/replay-rev-resource
 SVN-Repository-Root: /svn/dataset
@@ -313,7 +313,7 @@ Content-Type: text/xml; charset=UTF-8
 
 ```
 Date: Wed, 01 Jan 2019 01:01:01 GMT
-Server: Apache/2.4.29 (Unix)
+Server: Apache/2.4.39 (Unix)
 Content-Length: 369
 Keep-Alive: timeout=5, max=96
 Connection: Keep-Alive
@@ -371,7 +371,7 @@ Content-Type: text/xml; charset=UTF-8
 
 ```
 Date: Wed, 01 Jan 2019 01:01:01 GMT
-Server: Apache/2.4.29 (Unix)
+Server: Apache/2.4.39 (Unix)
 Content-Length: 1132
 Keep-Alive: timeout=5, max=95
 Connection: Keep-Alive
@@ -443,7 +443,7 @@ Content-Type: text/xml; charset=UTF-8
 
 ```
 Date: Wed, 01 Jan 2019 01:01:01 GMT
-Server: Apache/2.4.29 (Unix)
+Server: Apache/2.4.39 (Unix)
 DAV: 1,2
 DAV: version-control,checkout,working-resource
 DAV: merge,baseline,activity,version-controlled-collection
@@ -460,7 +460,7 @@ MS-Author-Via: DAV
 Allow: OPTIONS,GET,HEAD,POST,DELETE,TRACE,PROPFIND,PROPPATCH,COPY,MOVE,LOCK,UNLOCK,CHECKOUT
 DAV: http://subversion.tigris.org/xmlns/dav/svn/ephemeral-txnprops
 SVN-Youngest-Rev: 2
-SVN-Repository-UUID: f68861c9-3565-4bc9-8501-1873a7600b02
+SVN-Repository-UUID: 0c037904-30b1-4eb2-a8be-1dcc6c78b50d
 SVN-Repository-MergeInfo: yes
 DAV: http://subversion.tigris.org/xmlns/dav/svn/replay-rev-resource
 SVN-Repository-Root: /svn/dataset
@@ -514,7 +514,7 @@ Content-Type: text/xml; charset=UTF-8
 
 ```
 Date: Wed, 01 Jan 2019 01:01:01 GMT
-Server: Apache/2.4.29 (Unix)
+Server: Apache/2.4.39 (Unix)
 Content-Length: 371
 Keep-Alive: timeout=5, max=93
 Connection: Keep-Alive
@@ -572,7 +572,7 @@ Content-Type: text/xml; charset=UTF-8
 
 ```
 Date: Wed, 01 Jan 2019 01:01:01 GMT
-Server: Apache/2.4.29 (Unix)
+Server: Apache/2.4.39 (Unix)
 Keep-Alive: timeout=5, max=92
 Connection: Keep-Alive
 Transfer-Encoding: chunked
@@ -947,7 +947,7 @@ Content-Type: text/xml; charset=UTF-8
 
 ```
 Date: Wed, 01 Jan 2019 01:01:01 GMT
-Server: Apache/2.4.29 (Unix)
+Server: Apache/2.4.39 (Unix)
 DAV: 1,2
 DAV: version-control,checkout,working-resource
 DAV: merge,baseline,activity,version-controlled-collection
@@ -964,7 +964,7 @@ MS-Author-Via: DAV
 Allow: OPTIONS,GET,HEAD,POST,DELETE,TRACE,PROPFIND,PROPPATCH,COPY,MOVE,LOCK,UNLOCK,CHECKOUT
 DAV: http://subversion.tigris.org/xmlns/dav/svn/ephemeral-txnprops
 SVN-Youngest-Rev: 2
-SVN-Repository-UUID: f68861c9-3565-4bc9-8501-1873a7600b02
+SVN-Repository-UUID: 0c037904-30b1-4eb2-a8be-1dcc6c78b50d
 SVN-Repository-MergeInfo: yes
 DAV: http://subversion.tigris.org/xmlns/dav/svn/replay-rev-resource
 SVN-Repository-Root: /svn/dataset
@@ -1018,7 +1018,7 @@ Content-Type: text/xml; charset=UTF-8
 
 ```
 Date: Wed, 01 Jan 2019 01:01:01 GMT
-Server: Apache/2.4.29 (Unix)
+Server: Apache/2.4.39 (Unix)
 Content-Length: 378
 Keep-Alive: timeout=5, max=90
 Connection: Keep-Alive
