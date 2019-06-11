@@ -51,6 +51,26 @@ import static com.paulhammant.svnmerkleizer.TestMethods.getAndCheckSallysRootTxt
 import static org.assertj.core.api.Assertions.fail;
 import static org.junit.Assert.assertEquals;
 
+    /*
+
+          +-----------+
+          | TEST      |
+          |      CODE |
+          +-----------+
+                    |
+                    | RestAssured doing HTTP "GET" calls to
+                    | .merkle.csv | txt | html | xml resources
+                    |
+                    V
+                 +------------+
+                 | Servirtium |   <- In playback mode.
+                 |  Port 8100 |      Of recordings in src/test/mocks/
+                 +------------+
+
+
+     */
+
+
 public class PlayingBackSvnMerkleizerServiceTests {
 
     private static final int PORT = 8100;
@@ -88,13 +108,7 @@ public class PlayingBackSvnMerkleizerServiceTests {
         servirtiumServer.start();
 
         new File("merkleizer.db").delete();
-        merkleizerService = new TestExtendedSubversionDirectoryMerkleizerService.SubversionDirectoryMerkleizerServiceViaHiddenGetRoutes(
-                "http://localhost:8098/svn/dataset/", "abc123", metrics, new HashMap<>(), 8080);
-        long start = System.currentTimeMillis();
-        merkleizerService.start("server.join=false");
-        while (!merkleizerService.appStarted()) {
-            sleep(start);
-        }
+        merkleizerService = new TestExtendedSubversionDirectoryMerkleizerService.NullObject();
     }
 
     @After
@@ -102,13 +116,6 @@ public class PlayingBackSvnMerkleizerServiceTests {
         servirtiumServer.finishedScript();
         servirtiumServer.stop();
         servirtiumServer = null;
-
-        long start = System.currentTimeMillis();
-        merkleizerService.stop();
-        while (!merkleizerService.appStopped()) {
-            sleep(start);
-        }
-        merkleizerService = null;
     }
 
     @Test

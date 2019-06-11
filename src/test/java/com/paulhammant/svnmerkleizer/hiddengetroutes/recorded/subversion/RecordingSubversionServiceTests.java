@@ -65,14 +65,6 @@ public class RecordingSubversionServiceTests {
                     | .merkle.csv | txt | html | xml resources
                     |
                     V
-                 +------------+
-                 | Servirtium |   <- In record mode.
-                 |  Port 8100 |      Recording to src/test/mocks/
-                 +------------+
-                      |
-                      | HTTP Calls (OkHttp)
-                      |
-                      V
         +-------------------+
         |   SvnMerkleizer   |
         |     Port 8080     |
@@ -82,6 +74,15 @@ public class RecordingSubversionServiceTests {
                     | Multiple HTTP "PROPFIND" and "OPTIONS" calls (OkHttp)
                     |
                     V
+             +------------+
+             | Servirtium |   <- In record mode.
+             |  Port 8100 |      Recording to src/test/mocks/
+             +------------+
+                      |
+                      | HTTP Calls (OkHttp)
+                      | - the same PROPFIND" and "OPTIONS" calls, as above
+                      |
+                      V
         +----------------------+
         |      Subversion      |
         |      + Apache        |    <- This is a Docker container

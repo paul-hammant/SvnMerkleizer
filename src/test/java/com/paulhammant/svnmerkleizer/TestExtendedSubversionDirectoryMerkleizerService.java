@@ -279,4 +279,56 @@ public class TestExtendedSubversionDirectoryMerkleizerService {
 
     }
 
+    public static class NullObject implements TestingSubversionDirectoryMerkleizerService {
+        @Override
+        public void setCacheItemsToRev1AsIfThatWereRealityInTheSvnRepo() {
+
+        }
+
+        @Override
+        public void wipeJournal() {
+
+        }
+
+        @Override
+        public void writeSummaryToJournal() {
+
+        }
+
+        @Override
+        public Object getJournal() {
+            return "cache-misses=0\nrevs={}\n";
+        }
+
+        @Override
+        public void start(String... s) {
+
+        }
+
+        @Override
+        public boolean appStarted() {
+            return false;
+        }
+
+        @Override
+        public boolean appStopped() {
+            return false;
+        }
+
+        @Override
+        public void stop() {
+
+        }
+
+        @Override
+        public String getRequestLog() {
+            return "";
+        }
+
+        @Override
+        public void deleteCacheKeys() {
+
+        }
+    }
+
 }

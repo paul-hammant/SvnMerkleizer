@@ -51,6 +51,41 @@ import static org.assertj.core.api.Assertions.fail;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.junit.Assert.assertEquals;
 
+    /*
+
+          +-----------+
+          | TEST      |
+          |      CODE |
+          +-----------+
+                    |
+                    | RestAssured doing HTTP "GET" calls to
+                    | .merkle.csv | txt | html | xml resources
+                    |
+                    V
+        +-------------------+
+        |   SvnMerkleizer   |
+        |     Port 8080     |
+        | (plus disk cache) |
+        +-------------------+
+                    |
+                    | Multiple HTTP "PROPFIND" and "OPTIONS" calls (OkHttp)
+                    |
+                    V
+        +----------------------+
+        |      Subversion      |
+        |      + Apache        |    <- This is a Docker container
+        |    + MOD_DAV_SVN     |       "test harness". It is
+        |   + test commits     |       separately cloned *
+        |     in Docker        |
+        | Port 8098 externally |
+        | (Port 80 internally) |
+        +----------------------+
+
+        * https://github.com/paul-hammant-fork/svnmerkleizer-test-repo
+
+     */
+
+
 public class DirectServiceTests {
 
     private static final int PORT = 8080;

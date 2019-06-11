@@ -65,14 +65,15 @@ public class RecordingSvnMerkleizerServiceTests {
                     | .merkle.csv | txt | html | xml resources
                     |
                     V
-                 +------------+
-                 | Servirtium |   <- In record mode.
-                 |  Port 8100 |      Recording to src/test/mocks/
-                 +------------+
-                      |
-                      | HTTP Calls (OkHttp)
-                      |
-                      V
+             +------------+
+             | Servirtium |   <- In record mode.
+             |  Port 8100 |      Recording to src/test/mocks/
+             +------------+
+                  |
+                  | HTTP Calls (OkHttp)
+                  | - the same GET calls to .merkle.csv as above
+                  |
+                  V
         +-------------------+
         |   SvnMerkleizer   |
         |     Port 8080     |

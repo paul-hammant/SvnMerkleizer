@@ -52,6 +52,34 @@ import static org.assertj.core.api.Assertions.fail;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.junit.Assert.assertEquals;
 
+    /*
+
+          +-----------+
+          | TEST      |
+          |      CODE |
+          +-----------+
+                    |
+                    | RestAssured doing HTTP "GET" calls to
+                    | .merkle.csv | txt | html | xml resources
+                    |
+                    V
+        +-------------------+
+        |   SvnMerkleizer   |
+        |     Port 8080     |
+        | (plus disk cache) |
+        +-------------------+
+                    |
+                    | Multiple HTTP "PROPFIND" and "OPTIONS" calls (OkHttp)
+                    |
+                    V
+             +------------+
+             | Servirtium |   <- In playback mode.
+             |  Port 8100 |       Of recordings in src/test/mocks/
+             +------------+
+
+     */
+
+
 public class PlayingBackSubversionServiceTests {
 
     static final int PORT = 9080;
