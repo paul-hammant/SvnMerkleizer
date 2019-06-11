@@ -52,8 +52,6 @@ import static org.assertj.core.api.Assertions.fail;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.junit.Assert.assertEquals;
 
-public class RecordingSubversionServiceTests {
-
     /*
 
           +-----------+
@@ -97,6 +95,8 @@ public class RecordingSubversionServiceTests {
 
      */
 
+public class RecordingSubversionServiceTests {
+
     private static final int PORT = 9080;
     private ServirtiumServer servirtiumServer;
     private InteractionMonitor interactionMonitor;
@@ -108,7 +108,8 @@ public class RecordingSubversionServiceTests {
 
     private SvnMerkleizer.Metrics metrics;
 
-    static void sleep(long start) {
+
+    private static void sleep(long start) {
         try {
             Thread.sleep(15);
         } catch (InterruptedException e) {
@@ -156,8 +157,6 @@ public class RecordingSubversionServiceTests {
         while (!merkleizerService.appStarted()) {
             sleep(start);
         }
-        System.out.println();
-
     }
 
     @After

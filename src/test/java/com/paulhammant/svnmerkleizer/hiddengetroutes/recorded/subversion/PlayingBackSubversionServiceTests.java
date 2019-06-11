@@ -88,13 +88,10 @@ public class PlayingBackSubversionServiceTests {
 
     private TestExtendedSubversionDirectoryMerkleizerService.TestingSubversionDirectoryMerkleizerService merkleizerService;
 
-    private List<Long> durationJournal = new ArrayList<>();
-    private List<SvnMerkleizer.Counts> countsJournal = new ArrayList<>();
+    private List<Long> durationJournal;
+    private List<SvnMerkleizer.Counts> countsJournal ;
 
-    private SvnMerkleizer.Metrics metrics = (durationMillis, counts) -> {
-        durationJournal.add(durationMillis);
-        countsJournal.add(counts);
-    };
+    private SvnMerkleizer.Metrics metrics;
 
 
     private static void sleep(long start) {
@@ -110,6 +107,15 @@ public class PlayingBackSubversionServiceTests {
 
     @Before
     public void setup() throws Exception {
+
+        durationJournal = new ArrayList<>();
+        countsJournal = new ArrayList<>();
+
+        metrics = (durationMillis, counts) -> {
+            durationJournal.add(durationMillis);
+            countsJournal.add(counts);
+        };
+
         InteractionManipulations manipulations = new SubversionInteractionManipulations(
                 "localhost:8198/abc123", "localhost:8098/svn/dataset") {
             @Override
@@ -120,10 +126,12 @@ public class PlayingBackSubversionServiceTests {
                 return headerBackFromService;
             }
         };
+
         interactionMonitor =new MarkdownReplayer(new MarkdownReplayer.ReplayMonitor.Default());
         servirtiumServer = new JettyServirtiumServer(new ServiceMonitor.Default(), 8198,
                 manipulations, interactionMonitor);
         servirtiumServer.start();
+
         new File("merkleizer.db").delete();
         merkleizerService = new TestExtendedSubversionDirectoryMerkleizerService.SubversionDirectoryMerkleizerServiceViaHiddenGetRoutes(
                 "http://localhost:8198/abc123/", "abc123", metrics,
@@ -137,9 +145,7 @@ public class PlayingBackSubversionServiceTests {
 
     @After
     public void tearDown() {
-        servirtiumServer.finishedScript();
         servirtiumServer.stop();
-        servirtiumServer = null;
         long start = System.currentTimeMillis();
         merkleizerService.stop();
         while (!merkleizerService.appStopped()) {
@@ -239,6 +245,9 @@ public class PlayingBackSubversionServiceTests {
 
         countsJournal.clear();
         durationJournal.clear();
+
+        interactionMonitor.noteForNextInteraction("Test Context", "Get a CSV for sally at root of repo then\n" +
+                "Manipulate the tree and force cache-hits to show some efficiency");
 
         getAndCheckSallysRootTxt(PORT); // fills cache (if it was not filled already)
 
