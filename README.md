@@ -149,7 +149,7 @@ Git also doesn't allow per-user or per-group read/write
 permissions for directories/files, whereas Subversion does. Perhaps Git will deliver on all of these in the fullness
 of time. Or a successor takes over that's not objectionable to the Git intelligentsia.  
   
-That said, I'm willing to say that Git i a near perfect history retaining Merkle tree.
+That said, I'm willing to say that Git is a near perfect history-retaining Merkle tree.
   
 # Alternatives to SvnMerkleizer
 
