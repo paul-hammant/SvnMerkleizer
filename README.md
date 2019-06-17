@@ -1,6 +1,5 @@
 # SvnMerkleizer
 
-
 Features:
 
 * Adds Merkle-tree functionality to a Subversion install.
@@ -18,26 +17,30 @@ Limitations:
 A system of using hashes (SHA1 in Subversion's case) to track a directory tree of resources to allow fast determination 
 of whether "your" tree is out of step with "their" tree, and from that efficiently determine what needs to be 
 updated in order to keep you in step. It is a field of science in itself ([Ralph Merkle invented this in 1979](https://en.wikipedia.org/wiki/Merkle_tree)), 
-and underpins BlockChain, though vanilla Merkle Trees are not blockchains, and massively under appreciated in the 
+and underpins BlockChain, though vanilla Merkle trees are not blockchains, and massively under appreciated in the 
 industry and indeed society. 
   
 # How it works.
 
-When it receives a GET to /foo/bar/baz/.merkle this service handles the request and issues a number of 
-PROPFIND an OPTIONS (WebDAV) operations to Subversion via Apache and MOD_DAV_SVN. The SvnMerkleizer tech
-does a depth first traversal of the director tree working out where its SHA1 directory hash is out of 
-date and needs recalculating.
+When it receives a GET to `/foo/bar/baz/.merkle` the SvnMerkleizer service handles the request and issues a number of 
+PROPFIND an OPTIONS (WebDAV) operations to Subversion in respect of the directory `/foo/bar/baz/`. These operations 
+are a depth-first traversal of the director tree working out where its SHA1 directory hash is out of date and needs 
+to be recalculated.
 
-Then it caches all results for directories and sends the specific result sought back to the requester. 
-Depending on the client library and how out of date the tree is, the GET request could 
+SvnMerkleizer caches all those results for directories and sends a response back to the requester (for the directory. 
+in question). Depending on the client library and how out of date the tree is, the GET request could 
 timeout. The backend would continue calculating the tree, and a subsequent GET request for the same URL would
-be quicker in practice. It is possible that you could GET the root diretory's SHA1 with a cron job to keep it 
+be quicker in practice. It is possible that you could GET the root directory's SHA1 with a cron job to keep it 
 fresh ahead of need.
 
-Obviously that's a bunch of IO that makes it all imperfect.  This can be mitigated by moving the SvnMerkleizer service
-closet in terms of TCP/IP to the Apache/Subversion machine(s). I have a Docker image that is Apache, Subversion and the 
-SvnMerkleizer service in one image. That's unorthodox as you're supposed to have a single process(*) in a docker
-container, to allow smooth stutdown and restarts.
+Because of the caching of SHA1s for directories, time is saved when doing subsequent GETs of SHA1s for
+`/foo/bar/.merkle`, `/foo/.merkle`, or `/.merkle`.  
+
+You can configure SvnMerkleizer to have a different file name for the SHA1 endoint: `.mt` or `.sha1` or whatever 
+you want.
+
+Obviously that is a lot of I/O that makes it all imperfect.  This can be mitigated by moving the SvnMerkleizer service
+closet in terms of TCP/IP to the Apache/Subversion machine(s). See 'Docker' below.
 
 ## Different Merkle trees for different Subversion users
 
@@ -52,8 +55,8 @@ to determine any similarities toward that.  The supported permutations of Authz 
 ## Modes of operation. 
 
 As well as the GET-centric hidden `.merkle` resources, there is a alternate setup that uses a new HTTP verb/method
-on the directory (URL). You would deploy one or the other.  You could for example have a method 'MERKLETREE' 
-instead of GET.
+on the directory (URL). You would deploy one or the other.  You could for example have a method 'MERKLETREE' or 'MT'
+instead of GET. The name of the verb is up to you.
 
 # Building it.
 
@@ -120,7 +123,13 @@ And one of three HTTP servers abstracted by the excellent Jooby:
 Then pick one of the ways of [booting it](https://github.com/paul-hammant/SvnMerkleizer/tree/master/src/main/java/com/paulhammant/svnmerkleizer/boot), 
 and deploy it close to your Subversion/Apache service (minimizing HTTP distance is a good idea as it is chatty).
 
-Get acquainted as to how by looking at a Docker image that puts it all together: [SvnMerkleizer-all-in-one](https://github.com/paul-hammant/SvnMerkleizer-all-in-one) 
+## Docker Image
+
+I have a Docker image that is Apache WebServer, Subversion's MOD_DAV_SVN and the 
+SvnMerkleizer service in one image. That's unorthodox as you're supposed to have a single process(*) in a docker
+container, to allow smooth stutdown and restarts.
+
+See [SvnMerkleizer-all-in-one](https://github.com/paul-hammant/SvnMerkleizer-all-in-one). 
 
 # License
 
@@ -155,9 +164,9 @@ That said, I'm willing to say that Git is a near perfect history-retaining Merkl
 
 A better solution would be to have a Rust/Nim/Zig (or C) commit hook that recalculated the merkle tree for the 
 in-progress commit on 
-the server, and wrote .merkle files to the pertinent directories, and included them in the commit itself. That'd could 
+the server, and wrote real .merkle files to the pertinent directories, and included them in the commit itself. That could 
 force the committer to do a 'svn up' operation immediately following the commit, but that should be quick (and never 
-clash). I say could, because Subversion does not require to to be "up to date" with working copy before you commit, 
+clash). I say "could", because Subversion does not require to to be "up to date" with working copy before you commit, 
 unless one of the files your trying to change has changed server-side too. The downside of a commit-hook equivalent is 
 that it can only really be for a single 'admin' user, and if you yourself did a checkout and you're only permitted to 
 see a subset of the directories/files in the repo, then you'll not be able to verify the the merkle tree (because 
