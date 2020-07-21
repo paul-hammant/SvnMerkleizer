@@ -83,33 +83,33 @@ public abstract class SubversionDirectoryMerkleizerService extends Jooby {
         super.stop();
     }
 
-    protected void html(OkHttpClient okHttpClient, XStream svnXmlConverter, Request req, Response rsp) throws Throwable {
-        doJoobyResponse(rsp, svnMerkleizer.doDirectoryList(okHttpClient, svnXmlConverter,
+    protected void html(XStream svnXmlConverter, Request req, Response rsp) throws Throwable {
+        doJoobyResponse(rsp, svnMerkleizer.doDirectoryList(svnXmlConverter,
                 dir -> SvnMerkleizer.toHtml(dir), "text/html", req.path(), getAuthorization(req)
         ));
     }
 
-    protected void xml(OkHttpClient okHttpClient, XStream svnXmlConverter, XStream directoryXmlSerializer, Request req, Response rsp) throws Throwable {
-        doJoobyResponse(rsp, svnMerkleizer.doDirectoryList(okHttpClient, svnXmlConverter,
+    protected void xml(XStream svnXmlConverter, XStream directoryXmlSerializer, Request req, Response rsp) throws Throwable {
+        doJoobyResponse(rsp, svnMerkleizer.doDirectoryList(svnXmlConverter,
                 dir -> directoryXmlSerializer.toXML(dir), "text/xml", req.path(), getAuthorization(req)
         ));
     }
 
-    protected void txt(OkHttpClient okHttpClient, XStream svnXmlConverter, Request req, Response rsp) throws Throwable {
-        doJoobyResponse(rsp, svnMerkleizer.doDirectoryList(okHttpClient, svnXmlConverter,
+    protected void txt(XStream svnXmlConverter, Request req, Response rsp) throws Throwable {
+        doJoobyResponse(rsp, svnMerkleizer.doDirectoryList(svnXmlConverter,
                 dir -> dir.sha1 + "\n" + svnMerkleizer.toTXT(dir.contents), "text/plain", req.path(), getAuthorization(req)
         ));
     }
 
 
-    protected void csv(OkHttpClient okHttpClient, XStream svnXmlConverter, Request req, Response rsp) throws Throwable {
-        doJoobyResponse(rsp, svnMerkleizer.doDirectoryList(okHttpClient, svnXmlConverter,
+    protected void csv(XStream svnXmlConverter, Request req, Response rsp) throws Throwable {
+        doJoobyResponse(rsp, svnMerkleizer.doDirectoryList(svnXmlConverter,
                 dir -> "," + dir.sha1 + "\n" + SvnMerkleizer.toCSV(dir.contents), "text/csv", req.path(), getAuthorization(req)
         ));
     }
 
-    protected void json(OkHttpClient okHttpClient, XStream svnXmlConverter, Request req, Response rsp) throws Throwable {
-        doJoobyResponse(rsp, svnMerkleizer.doDirectoryList(okHttpClient, svnXmlConverter,
+    protected void json(XStream svnXmlConverter, Request req, Response rsp) throws Throwable {
+        doJoobyResponse(rsp, svnMerkleizer.doDirectoryList(svnXmlConverter,
                 dir -> svnMerkleizer.writePrettyJson(dir), "application/json", req.path(), getAuthorization(req)
         ));
     }
@@ -157,10 +157,10 @@ public abstract class SubversionDirectoryMerkleizerService extends Jooby {
 
     public static class ViaCustomMethodOnDirectory extends SubversionDirectoryMerkleizerService {
 
-        public ViaCustomMethodOnDirectory(String method, String delegateToUrl, String contextDir, String cacheFilePath, SvnMerkleizer.Metrics metrics, int port) {
-            super(new SvnMerkleizer(delegateToUrl, contextDir, metrics, cacheFilePath));
+        public ViaCustomMethodOnDirectory(String method, String delegateToUrl, String contextDir, String cacheFilePath,
+                                          SvnMerkleizer.Metrics metrics, int port, final OkHttpClient okHttpClient) {
+            super(new SvnMerkleizer(delegateToUrl, contextDir, metrics, cacheFilePath, okHttpClient));
 
-            OkHttpClient okHttpClient = new OkHttpClient();
             XStream svnXmlConverter = makePropfindXmlConverter();
             XStream directoryXmlSerializer = makeDirectoryXmlSerializer();
 
@@ -175,11 +175,11 @@ public abstract class SubversionDirectoryMerkleizerService extends Jooby {
 
                 String expectsType = expectsTypeHdr.value();
                 switch (expectsType) {
-                    case "JSON": json(okHttpClient, svnXmlConverter, req, rsp); break;
-                    case "CSV": csv(okHttpClient, svnXmlConverter, req, rsp); break;
-                    case "TXT": txt(okHttpClient, svnXmlConverter, req, rsp); break;
-                    case "XML": xml(okHttpClient, svnXmlConverter, directoryXmlSerializer, req, rsp); break;
-                    case "HTML": html(okHttpClient, svnXmlConverter, req, rsp); break;
+                    case "JSON": json(svnXmlConverter, req, rsp); break;
+                    case "CSV": csv(svnXmlConverter, req, rsp); break;
+                    case "TXT": txt(svnXmlConverter, req, rsp); break;
+                    case "XML": xml(svnXmlConverter, directoryXmlSerializer, req, rsp); break;
+                    case "HTML": html(svnXmlConverter, req, rsp); break;
                     default:
                         rsp.status(500);
                         rsp.type("text/plain");
@@ -206,11 +206,11 @@ public abstract class SubversionDirectoryMerkleizerService extends Jooby {
 
     public static class ViaHiddenGetRoutes extends SubversionDirectoryMerkleizerService {
 
-        public ViaHiddenGetRoutes(String delegateToUrl, String contextDir, SvnMerkleizer.Metrics metrics, SvnMerkleizer svnMerkleizer, int port) {
+        public ViaHiddenGetRoutes(String delegateToUrl, String contextDir, SvnMerkleizer.Metrics metrics,
+                                  SvnMerkleizer svnMerkleizer, int port, final OkHttpClient okHttpClient) {
             super(svnMerkleizer);
 
-            OkHttpClient okHttpClient = new OkHttpClient();
-//        Logger.getLogger(OkHttpClient.class.getName()).setLevel(Level.FINE);
+            //        Logger.getLogger(OkHttpClient.class.getName()).setLevel(Level.FINE);
             XStream svnXmlConverter = makePropfindXmlConverter();
             XStream directoryXmlSerializer = makeDirectoryXmlSerializer();
 
@@ -221,23 +221,23 @@ public abstract class SubversionDirectoryMerkleizerService extends Jooby {
 //                    System.out.println(p);
 //                });
                 get("**/.merkle.json", (req, rsp) -> {
-                    json(okHttpClient, svnXmlConverter, req, rsp);
+                    json(svnXmlConverter, req, rsp);
                 });
 
                 get("**/.merkle.csv", (req, rsp) -> {
-                    csv(okHttpClient, svnXmlConverter, req, rsp);
+                    csv(svnXmlConverter, req, rsp);
                 });
 
                 get("**/.merkle.txt", (req, rsp) -> {
-                    txt(okHttpClient, svnXmlConverter, req, rsp);
+                    txt(svnXmlConverter, req, rsp);
                 });
 
                 get("**/.merkle.xml", (req, rsp) -> {
-                    xml(okHttpClient, svnXmlConverter, directoryXmlSerializer, req, rsp);
+                    xml(svnXmlConverter, directoryXmlSerializer, req, rsp);
                 });
 
                 get("**/.merkle.html", (req, rsp) -> {
-                    html(okHttpClient, svnXmlConverter, req, rsp);
+                    html(svnXmlConverter, req, rsp);
                 });
             });
         }

@@ -74,8 +74,12 @@ public class SvnMerkleizer {
     private final ObjectMapper om;
     private DB mapDBcache;
     private String cacheFilePath;
+    private final OkHttpClient okHttpClient;
 
-    public SvnMerkleizer(String delegateToUrl, String contextDir, Metrics metrics, String cacheFilePath) {
+    public SvnMerkleizer(String delegateToUrl, String contextDir,
+                         Metrics metrics, String cacheFilePath,
+                         final OkHttpClient okHttpClient) {
+        this.okHttpClient = okHttpClient;
         this.delegateToUrl = delegateToUrl;
         this.contextDir = contextDir;
         if (cacheFilePath != null && !cacheFilePath.equals("")) {
@@ -170,7 +174,7 @@ public class SvnMerkleizer {
         }
     }
 
-    public SvnMerkelizerResponse doDirectoryList(OkHttpClient okHttpClient, XStream svnXmlConverter,
+    public SvnMerkelizerResponse doDirectoryList(XStream svnXmlConverter,
                                                  Output op, String contentType, String path, String authorization)
             throws IOException, NotFound404 {
         long start = System.currentTimeMillis();
@@ -178,7 +182,7 @@ public class SvnMerkleizer {
         String serverPart = url.substring(0, url.indexOf("/", LENGTH_HTTP_INTRODUCER));
         String pathPart = url.substring(url.indexOf("/", LENGTH_HTTP_INTRODUCER));
         Counts counts = new Counts();
-        Items items = getItems(okHttpClient, getUser(authorization), svnXmlConverter,
+        Items items = getItems(getUser(authorization), svnXmlConverter,
                 cache, serverPart, pathPart, authorization, false, counts);
         SvnMerkelizerResponse resp = new SvnMerkelizerResponse();
         if (items.dir == null) {
@@ -234,13 +238,13 @@ public class SvnMerkleizer {
         return sb.toString();
     }
 
-    private Items getItems(OkHttpClient okHttpClient, String user,
-                                                                XStream svnXmlConverter,
-                                                                ConcurrentMap<String, VersionInfo> cache,
-                                                                String delegateToUrl, String pathPart,
-                                                                String authorization, boolean sha1Only, Counts counts) throws IOException, NotFound404 {
+    private Items getItems(String user,
+                           XStream svnXmlConverter,
+                           ConcurrentMap<String, VersionInfo> cache,
+                           String delegateToUrl, String pathPart,
+                           String authorization, boolean sha1Only, Counts counts) throws IOException, NotFound404 {
 
-        final okhttp3.Response response = propfindDirlist(okHttpClient, authorization, delegateToUrl + pathPart, counts);
+        final okhttp3.Response response = propfindDirlist(authorization, delegateToUrl + pathPart, counts);
         if (response.code() < 200 || response.code() > 299) {
             response.close();
             return Items.notSuccessful(response.code());
@@ -278,7 +282,7 @@ public class SvnMerkleizer {
             if (versionInfo != null) {
                 if (versionInfo.xmlHashCode == xmlHashCode) {
                     // costly, but can't be avoided before doing the cache lookup.
-                    currSvnRevision = getSvnRevision(okHttpClient, delegateToUrl, pathPart, authorization, svnXmlConverter, svnRoot, counts);
+                    currSvnRevision = getSvnRevision(delegateToUrl, pathPart, authorization, svnXmlConverter, svnRoot, counts);
                     if (versionInfo.svnRevision == currSvnRevision) {
                         cacheHit(cacheKey);
                         return Items.hereItIs(Directory.versionInfoAndSha1Only(versionInfo));
@@ -289,14 +293,14 @@ public class SvnMerkleizer {
         }
 
         if (currSvnRevision == -1) {
-            currSvnRevision = getSvnRevision(okHttpClient, delegateToUrl, pathPart, authorization, svnXmlConverter, svnRoot, counts);
+            currSvnRevision = getSvnRevision(delegateToUrl, pathPart, authorization, svnXmlConverter, svnRoot, counts);
         }
 
         // Recursion into directories here (potentially very costly)
         for (int i = 0; i < directory.contents.size(); i++) {
             Entry entry = directory.contents.get(i);
             if (entry.isDirWithNoSha1()) {
-                Items items = getItems(okHttpClient, user, svnXmlConverter, cache, delegateToUrl, pathPart + entry.dir + "/", authorization, true, counts);
+                Items items = getItems(user, svnXmlConverter, cache, delegateToUrl, pathPart + entry.dir + "/", authorization, true, counts);
                 if (items.dir == null) {
                     return items;
                 }
@@ -360,11 +364,11 @@ public class SvnMerkleizer {
         throw new RuntimeException("No version number found");
     }
 
-    private int getSvnRevision(OkHttpClient okHttpClient, String delegateToUrl, String pathPart, String authorization, XStream svnXmlConverter, String svnRoot, Counts counts) throws IOException {
+    private int getSvnRevision(String delegateToUrl, String pathPart, String authorization, XStream svnXmlConverter, String svnRoot, Counts counts) throws IOException {
 
-        String youngestRev = options(okHttpClient, authorization, delegateToUrl + pathPart, counts);
+        String youngestRev = options(authorization, delegateToUrl + pathPart, counts);
         String url = (delegateToUrl + svnRoot + "!svn/rvr/" + youngestRev + "/" + pathPart.substring(svnRoot.length())).replace("//","/");
-        okhttp3.Response response = propfindItemOnly(okHttpClient, authorization, url, counts);
+        okhttp3.Response response = propfindItemOnly(authorization, url, counts);
         String string = response.body().string();
         PropfindSvnResult result = null;
         result = (PropfindSvnResult) svnXmlConverter.fromXML(eliminateNamespaces(string));
@@ -374,7 +378,7 @@ public class SvnMerkleizer {
         return pluckVersion(result);
     }
 
-    private okhttp3.Response propfindDirlist(OkHttpClient client, String authorization, String url,
+    private okhttp3.Response propfindDirlist(String authorization, String url,
                                              Counts counts) throws IOException {
 
         String data = "<?xml version=\"1.0\" encoding=\"utf-8\" ?>\n" +
@@ -388,14 +392,14 @@ public class SvnMerkleizer {
 
         Map<String, String> headers = new HashMap<>();
         headers.put("Depth", "1");
-        return getResponse(client, authorization, url, counts, data, headers);
+        return getResponse(authorization, url, counts, data, headers);
     }
 
-    private okhttp3.Response getResponse(OkHttpClient client, String authorization, String url, Counts counts, String data, Map<String, String> headers) throws IOException {
+    private okhttp3.Response getResponse(String authorization, String url, Counts counts, String data, Map<String, String> headers) throws IOException {
         if (authorization != null) {
             headers.put("Authorization", authorization);
         }
-        okhttp3.Response response = client.newCall(new okhttp3.Request.Builder()
+        okhttp3.Response response = okHttpClient.newCall(new okhttp3.Request.Builder()
                 .url(url)
                 .method("PROPFIND", RequestBody.create(MediaType.parse("text/xml"), data))
                 .headers(Headers.of(headers))
@@ -404,16 +408,16 @@ public class SvnMerkleizer {
         return response;
     }
 
-    private okhttp3.Response propfindItemOnly(OkHttpClient client, String auth, String url, Counts counts) throws IOException {
+    private okhttp3.Response propfindItemOnly(String auth, String url, Counts counts) throws IOException {
 
         String data = "<?xml version=\"1.0\" encoding=\"utf-8\"?><propfind xmlns=\"DAV:\"><prop><version-name/></prop></propfind>";
 
         Map<String, String> headers = new HashMap<>();
         headers.put("Depth", "0");
-        return getResponse(client, auth, url, counts, data, headers);
+        return getResponse(auth, url, counts, data, headers);
     }
 
-    private String options(OkHttpClient client, String auth, String url, Counts counts) throws IOException {
+    private String options(String auth, String url, Counts counts) throws IOException {
 
         String data = "<?xml version=\"1.0\" encoding=\"utf-8\"?><D:options xmlns:D=\"DAV:\"><D:activity-collection-set></D:activity-collection-set></D:options>";
 
@@ -427,7 +431,7 @@ public class SvnMerkleizer {
                 .method("OPTIONS", RequestBody.create(MediaType.parse("text/xml"), data))
                 .headers(Headers.of(headers))
                 .build();
-        okhttp3.Response response = client.newCall(request).execute();
+        okhttp3.Response response = okHttpClient.newCall(request).execute();
         counts.options++;
         String youngestRev = response.header("SVN-Youngest-Rev");
         response.body().close();

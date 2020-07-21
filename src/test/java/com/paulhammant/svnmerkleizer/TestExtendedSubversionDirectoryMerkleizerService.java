@@ -78,7 +78,7 @@ public class TestExtendedSubversionDirectoryMerkleizerService {
         public SubversionDirectoryMerkleizerServiceViaCustomMethodOnDirectory() {
             super("TESTING-CUSTOM-METHOD",
                     "http://localhost:8098/svn/dataset/",
-                    "merkle", "merkleizer.db", new SvnMerkleizer.Metrics.Console(), 8080);
+                    "merkle", "merkleizer.db", new SvnMerkleizer.Metrics.Console(), 8080, new OkHttpClient());
             use("*", new RequestLogger().log(line -> {
                 // nothing so far;
             }));
@@ -91,13 +91,13 @@ public class TestExtendedSubversionDirectoryMerkleizerService {
         }
 
         @Override
-        protected void html(OkHttpClient okHttpClient, XStream svnXmlConverter, Request req, Response rsp) throws Throwable {
+        protected void html(XStream svnXmlConverter, Request req, Response rsp) throws Throwable {
             rsp.type("text/plain"); // not important fot test
             rsp.send("html()");
         }
 
         @Override
-        protected void xml(OkHttpClient okHttpClient, XStream svnXmlConverter, XStream directoryXmlSerializer, Request req, Response rsp) throws Throwable {
+        protected void xml(XStream svnXmlConverter, XStream directoryXmlSerializer, Request req, Response rsp) throws Throwable {
             rsp.type("text/plain"); // not important fot test
             try {
                 rsp.send("xml()");
@@ -108,19 +108,19 @@ public class TestExtendedSubversionDirectoryMerkleizerService {
         }
 
         @Override
-        protected void txt(OkHttpClient okHttpClient, XStream svnXmlConverter, Request req, Response rsp) throws Throwable {
+        protected void txt(XStream svnXmlConverter, Request req, Response rsp) throws Throwable {
             rsp.type("text/plain"); // not important fot test
             rsp.send("txt()");
         }
 
         @Override
-        protected void csv(OkHttpClient okHttpClient, XStream svnXmlConverter, Request req, Response rsp) throws Throwable {
+        protected void csv(XStream svnXmlConverter, Request req, Response rsp) throws Throwable {
             rsp.type("text/plain"); // not important fot test
             rsp.send("csv()");
         }
 
         @Override
-        protected void json(OkHttpClient okHttpClient, XStream svnXmlConverter, Request req, Response rsp) throws Throwable {
+        protected void json(XStream svnXmlConverter, Request req, Response rsp) throws Throwable {
             rsp.type("text/plain"); // not important fot test
             rsp.send("json()");
         }
@@ -179,13 +179,13 @@ public class TestExtendedSubversionDirectoryMerkleizerService {
         private SvnMerkleizer svnMerkleizerForTesting;
 
         public SubversionDirectoryMerkleizerServiceViaHiddenGetRoutes(String delegateToUrl, String contextDir, SvnMerkleizer.Metrics metrics, HashMap<Integer, Integer> revCounts, int port) {
-            super(delegateToUrl, contextDir, metrics, null, port);
+            super(delegateToUrl, contextDir, metrics, null, port, new OkHttpClient());
 
             // hack for testing
             try {
                 Field smf = SubversionDirectoryMerkleizerService.class.getDeclaredField("svnMerkleizer");
                 smf.setAccessible(true);
-                svnMerkleizerForTesting = new SvnMerkleizer(delegateToUrl, contextDir, metrics, "merkleizer.db") {
+                svnMerkleizerForTesting = new SvnMerkleizer(delegateToUrl, contextDir, metrics, "merkleizer.db", new OkHttpClient()) {
                     @Override
                     public void cacheMiss(String cacheKey) {
                         cacheMiss++;
