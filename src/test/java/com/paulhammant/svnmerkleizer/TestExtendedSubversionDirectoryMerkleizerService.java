@@ -31,6 +31,7 @@
 
 package com.paulhammant.svnmerkleizer;
 
+import com.paulhammant.svnmerkleizer.boot.ViaCustomMethodOnDirectory;
 import com.paulhammant.svnmerkleizer.pojos.Directory;
 import com.paulhammant.svnmerkleizer.pojos.VersionInfo;
 import com.thoughtworks.xstream.XStream;
@@ -69,7 +70,7 @@ public class TestExtendedSubversionDirectoryMerkleizerService {
     }
 
     public static class SubversionDirectoryMerkleizerServiceViaCustomMethodOnDirectory
-            extends SubversionDirectoryMerkleizerService.ViaCustomMethodOnDirectory
+            extends ViaCustomMethodOnDirectory
             implements TestingSubversionDirectoryMerkleizerService {
 
         private boolean started;
