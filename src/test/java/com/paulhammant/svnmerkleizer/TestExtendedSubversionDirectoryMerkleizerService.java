@@ -34,7 +34,6 @@ package com.paulhammant.svnmerkleizer;
 import com.paulhammant.svnmerkleizer.boot.ViaCustomMethodOnDirectory;
 import com.paulhammant.svnmerkleizer.pojos.Directory;
 import com.paulhammant.svnmerkleizer.pojos.VersionInfo;
-import com.thoughtworks.xstream.XStream;
 import okhttp3.OkHttpClient;
 import org.jooby.Request;
 import org.jooby.RequestLogger;
@@ -92,13 +91,13 @@ public class TestExtendedSubversionDirectoryMerkleizerService {
         }
 
         @Override
-        protected void html(XStream svnXmlConverter, Request req, Response rsp) throws Throwable {
+        protected void html(Request req, Response rsp) throws Throwable {
             rsp.type("text/plain"); // not important fot test
             rsp.send("html()");
         }
 
         @Override
-        protected void xml(XStream svnXmlConverter, XStream directoryXmlSerializer, Request req, Response rsp) throws Throwable {
+        protected void xml(Request req, Response rsp) throws Throwable {
             rsp.type("text/plain"); // not important fot test
             try {
                 rsp.send("xml()");
@@ -109,19 +108,19 @@ public class TestExtendedSubversionDirectoryMerkleizerService {
         }
 
         @Override
-        protected void txt(XStream svnXmlConverter, Request req, Response rsp) throws Throwable {
+        protected void txt(Request req, Response rsp) throws Throwable {
             rsp.type("text/plain"); // not important fot test
             rsp.send("txt()");
         }
 
         @Override
-        protected void csv(XStream svnXmlConverter, Request req, Response rsp) throws Throwable {
+        protected void csv(Request req, Response rsp) throws Throwable {
             rsp.type("text/plain"); // not important fot test
             rsp.send("csv()");
         }
 
         @Override
-        protected void json(XStream svnXmlConverter, Request req, Response rsp) throws Throwable {
+        protected void json(Request req, Response rsp) throws Throwable {
             rsp.type("text/plain"); // not important fot test
             rsp.send("json()");
         }

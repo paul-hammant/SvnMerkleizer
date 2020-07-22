@@ -30,15 +30,12 @@
 */
 package com.paulhammant.svnmerkleizer;
 
-import com.thoughtworks.xstream.XStream;
 import okhttp3.OkHttpClient;
 import org.jooby.Jooby;
 import org.jooby.Mutant;
 import org.jooby.Request;
 import org.jooby.Response;
 
-import static com.paulhammant.svnmerkleizer.Helpers.makeDirectoryXmlSerializer;
-import static com.paulhammant.svnmerkleizer.Helpers.makePropfindXmlConverter;
 import static com.paulhammant.svnmerkleizer.NullNettyInternalLoggerFactory.noLoggingForNettyPlease;
 
 /**
@@ -47,6 +44,7 @@ import static com.paulhammant.svnmerkleizer.NullNettyInternalLoggerFactory.noLog
 public abstract class SubversionDirectoryMerkleizerService extends Jooby {
 
     private SvnMerkleizer svnMerkleizer;
+
 
     static {
         noLoggingForNettyPlease();
@@ -79,33 +77,33 @@ public abstract class SubversionDirectoryMerkleizerService extends Jooby {
         super.stop();
     }
 
-    protected void html(XStream svnXmlConverter, Request req, Response rsp) throws Throwable {
-        doJoobyResponse(rsp, svnMerkleizer.doDirectoryList(svnXmlConverter,
+    protected void html(Request req, Response rsp) throws Throwable {
+        doJoobyResponse(rsp, svnMerkleizer.doDirectoryList(
                 dir -> SvnMerkleizer.toHtml(dir), "text/html", req.path(), getAuthorization(req)
         ));
     }
 
-    protected void xml(XStream svnXmlConverter, XStream directoryXmlSerializer, Request req, Response rsp) throws Throwable {
-        doJoobyResponse(rsp, svnMerkleizer.doDirectoryList(svnXmlConverter,
-                dir -> directoryXmlSerializer.toXML(dir), "text/xml", req.path(), getAuthorization(req)
+    protected void xml(Request req, Response rsp) throws Throwable {
+        doJoobyResponse(rsp, svnMerkleizer.doDirectoryList(
+                dir -> SvnMerkleizer.toXML(dir), "text/xml", req.path(), getAuthorization(req)
         ));
     }
 
-    protected void txt(XStream svnXmlConverter, Request req, Response rsp) throws Throwable {
-        doJoobyResponse(rsp, svnMerkleizer.doDirectoryList(svnXmlConverter,
+    protected void txt(Request req, Response rsp) throws Throwable {
+        doJoobyResponse(rsp, svnMerkleizer.doDirectoryList(
                 dir -> dir.sha1 + "\n" + svnMerkleizer.toText(dir.contents), "text/plain", req.path(), getAuthorization(req)
         ));
     }
 
 
-    protected void csv(XStream svnXmlConverter, Request req, Response rsp) throws Throwable {
-        doJoobyResponse(rsp, svnMerkleizer.doDirectoryList(svnXmlConverter,
+    protected void csv(Request req, Response rsp) throws Throwable {
+        doJoobyResponse(rsp, svnMerkleizer.doDirectoryList(
                 dir -> "," + dir.sha1 + "\n" + SvnMerkleizer.toCSV(dir.contents), "text/csv", req.path(), getAuthorization(req)
         ));
     }
 
-    protected void json(XStream svnXmlConverter, Request req, Response rsp) throws Throwable {
-        doJoobyResponse(rsp, svnMerkleizer.doDirectoryList(svnXmlConverter,
+    protected void json(Request req, Response rsp) throws Throwable {
+        doJoobyResponse(rsp, svnMerkleizer.doDirectoryList(
                 dir -> svnMerkleizer.toPrettyJson(dir), "application/json", req.path(), getAuthorization(req)
         ));
     }
@@ -133,8 +131,6 @@ public abstract class SubversionDirectoryMerkleizerService extends Jooby {
         svnMerkleizer.clearCache();
     }
 
-
-
     public static class ViaHiddenGetRoutes extends SubversionDirectoryMerkleizerService {
 
         public ViaHiddenGetRoutes(String delegateToUrl, String contextDir, SvnMerkleizer.Metrics metrics,
@@ -142,8 +138,6 @@ public abstract class SubversionDirectoryMerkleizerService extends Jooby {
             super(svnMerkleizer);
 
             //        Logger.getLogger(OkHttpClient.class.getName()).setLevel(Level.FINE);
-            XStream svnXmlConverter = makePropfindXmlConverter();
-            XStream directoryXmlSerializer = makeDirectoryXmlSerializer();
 
             path(contextDir, () -> {
                 port(port);
@@ -152,23 +146,23 @@ public abstract class SubversionDirectoryMerkleizerService extends Jooby {
 //                    System.out.println(p);
 //                });
                 get("**/.merkle.json", (req, rsp) -> {
-                    json(svnXmlConverter, req, rsp);
+                    json(req, rsp);
                 });
 
                 get("**/.merkle.csv", (req, rsp) -> {
-                    csv(svnXmlConverter, req, rsp);
+                    csv(req, rsp);
                 });
 
                 get("**/.merkle.txt", (req, rsp) -> {
-                    txt(svnXmlConverter, req, rsp);
+                    txt(req, rsp);
                 });
 
                 get("**/.merkle.xml", (req, rsp) -> {
-                    xml(svnXmlConverter, directoryXmlSerializer, req, rsp);
+                    xml(req, rsp);
                 });
 
                 get("**/.merkle.html", (req, rsp) -> {
-                    html(svnXmlConverter, req, rsp);
+                    html(req, rsp);
                 });
             });
         }

@@ -2,23 +2,16 @@ package com.paulhammant.svnmerkleizer.boot;
 
 import com.paulhammant.svnmerkleizer.SubversionDirectoryMerkleizerService;
 import com.paulhammant.svnmerkleizer.SvnMerkleizer;
-import com.thoughtworks.xstream.XStream;
 import okhttp3.OkHttpClient;
 import org.jooby.Mutant;
 import org.jooby.Request;
 import org.jooby.Response;
-
-import static com.paulhammant.svnmerkleizer.Helpers.makeDirectoryXmlSerializer;
-import static com.paulhammant.svnmerkleizer.Helpers.makePropfindXmlConverter;
 
 public class ViaCustomMethodOnDirectory extends SubversionDirectoryMerkleizerService {
 
     public ViaCustomMethodOnDirectory(String method, String delegateToUrl, String contextDir, String cacheFilePath,
                                       SvnMerkleizer.Metrics metrics, int port, final OkHttpClient okHttpClient) {
         super(new SvnMerkleizer(delegateToUrl, contextDir, metrics, cacheFilePath, okHttpClient));
-
-        XStream svnXmlConverter = makePropfindXmlConverter();
-        XStream directoryXmlSerializer = makeDirectoryXmlSerializer();
 
         use(method, "**/", (req, rsp) -> {
             port(port);
@@ -31,11 +24,11 @@ public class ViaCustomMethodOnDirectory extends SubversionDirectoryMerkleizerSer
 
             String expectsType = expectsTypeHdr.value();
             switch (expectsType) {
-                case "JSON": json(svnXmlConverter, req, rsp); break;
-                case "CSV": csv(svnXmlConverter, req, rsp); break;
-                case "TXT": txt(svnXmlConverter, req, rsp); break;
-                case "XML": xml(svnXmlConverter, directoryXmlSerializer, req, rsp); break;
-                case "HTML": html(svnXmlConverter, req, rsp); break;
+                case "JSON": json(req, rsp); break;
+                case "CSV": csv(req, rsp); break;
+                case "TXT": txt(req, rsp); break;
+                case "XML": xml(req, rsp); break;
+                case "HTML": html(req, rsp); break;
                 default:
                     rsp.status(500);
                     rsp.type("text/plain");
