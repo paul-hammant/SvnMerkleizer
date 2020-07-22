@@ -266,7 +266,7 @@ public class SvnMerkleizer {
                            String delegateToUrl, String pathPart,
                            String authorization, boolean sha1Only, Counts counts) throws IOException, NotFound404 {
 
-        final okhttp3.Response response = propfindDirlist(authorization, delegateToUrl + pathPart, counts);
+        final okhttp3.Response response = getPROPFINDDirlist(authorization, delegateToUrl + pathPart, counts);
         if (response.code() < 200 || response.code() > 299) {
             response.close();
             return Items.notSuccessful(response.code());
@@ -372,7 +372,7 @@ public class SvnMerkleizer {
         throw new RuntimeException("No baseline relative path found");
     }
 
-    private int pluckVersion(PropfindSvnResult result) {
+    static int pluckVersion(PropfindSvnResult result) {
         // TODO lambda equiv
         for (int i = 0; i < result.responses.size(); i++) {
             DResponse dResponse = result.responses.get(i);
@@ -388,20 +388,18 @@ public class SvnMerkleizer {
 
     private int getSvnRevision(String delegateToUrl, String pathPart, String authorization, XStream svnXmlConverter, String svnRoot, Counts counts) throws IOException {
 
-        String youngestRev = options(authorization, delegateToUrl + pathPart, counts);
+        String youngestRev = getYoungestRevisionViaOPTIONS(authorization, delegateToUrl + pathPart, counts);
         String url = (delegateToUrl + svnRoot + "!svn/rvr/" + youngestRev + "/" + pathPart.substring(svnRoot.length())).replace("//","/");
-        okhttp3.Response response = propfindItemOnly(authorization, url, counts);
-        String string = response.body().string();
-        PropfindSvnResult result = null;
-        result = (PropfindSvnResult) svnXmlConverter.fromXML(eliminateNamespaces(string));
+        okhttp3.Response response = getPROPFINDItemOnly(authorization, url, counts);
+        PropfindSvnResult propfindSvnResult = (PropfindSvnResult) svnXmlConverter.fromXML(eliminateNamespaces(response.body().string()));
         if (response.code() != 207) {
             throw new RuntimeException("wrong status code " + response.code());
         }
-        return pluckVersion(result);
+        return pluckVersion(propfindSvnResult);
     }
 
-    private okhttp3.Response propfindDirlist(String authorization, String url,
-                                             Counts counts) throws IOException {
+    private okhttp3.Response getPROPFINDDirlist(String authorization, String url,
+                                                Counts counts) throws IOException {
 
         String data = "<?xml version=\"1.0\" encoding=\"utf-8\" ?>\n" +
                 "<D:propfind xmlns:D=\"DAV:\">\n" +
@@ -414,32 +412,32 @@ public class SvnMerkleizer {
 
         Map<String, String> headers = new HashMap<>();
         headers.put("Depth", "1");
-        return getResponse(authorization, url, counts, data, headers);
+        return getPROPFINDResponse(authorization, url, counts, data, headers);
     }
 
-    private okhttp3.Response getResponse(String authorization, String url, Counts counts, String data, Map<String, String> headers) throws IOException {
+    private okhttp3.Response getPROPFINDResponse(String authorization, String url, Counts counts, String data, Map<String, String> headers) throws IOException {
         if (authorization != null) {
             headers.put("Authorization", authorization);
         }
-        okhttp3.Response response = okHttpClient.newCall(new okhttp3.Request.Builder()
+        okhttp3.Response propfindResponse = okHttpClient.newCall(new okhttp3.Request.Builder()
                 .url(url)
                 .method("PROPFIND", RequestBody.create(MediaType.parse("text/xml"), data))
                 .headers(Headers.of(headers))
                 .build()).execute();
         counts.propfind++;
-        return response;
+        return propfindResponse;
     }
 
-    private okhttp3.Response propfindItemOnly(String auth, String url, Counts counts) throws IOException {
+    private okhttp3.Response getPROPFINDItemOnly(String auth, String url, Counts counts) throws IOException {
 
         String data = "<?xml version=\"1.0\" encoding=\"utf-8\"?><propfind xmlns=\"DAV:\"><prop><version-name/></prop></propfind>";
 
         Map<String, String> headers = new HashMap<>();
         headers.put("Depth", "0");
-        return getResponse(auth, url, counts, data, headers);
+        return getPROPFINDResponse(auth, url, counts, data, headers);
     }
 
-    private String options(String auth, String url, Counts counts) throws IOException {
+    private String getYoungestRevisionViaOPTIONS(String auth, String url, Counts counts) throws IOException {
 
         String data = "<?xml version=\"1.0\" encoding=\"utf-8\"?><D:options xmlns:D=\"DAV:\"><D:activity-collection-set></D:activity-collection-set></D:options>";
 

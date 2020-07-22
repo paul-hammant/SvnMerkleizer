@@ -42,6 +42,7 @@ import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.fail;
 
 public class SubversionMerkleizerUnitTests {
 
@@ -110,6 +111,33 @@ public class SubversionMerkleizerUnitTests {
         list.add(Entry.dir("ddd", "ssshhaa11"));
         list.add(Entry.file("fff", "syda87sf8e6w"));
         return list;
+    }
+
+    @Test
+    public void pluckVersionDoesItsThing() {
+
+
+        PropfindSvnResult result = new PropfindSvnResult();
+        result.responses = new ArrayList<>();
+        try {
+            SvnMerkleizer.pluckVersion(result);
+            fail();
+        } catch (RuntimeException e) {
+            assertThat(e.getMessage()).isEqualTo("No version number found");
+        }
+
+        DResponse e = new DResponse();
+        e.propstats = new ArrayList<>();
+        DPropstat e1 = new DPropstat();
+        e1.prop = new DProp();
+        e1.prop.baselineRelativePath = "xyz";
+        e1.prop.sha1Checksum = "fhfhf";
+        e1.prop.versionName = "33";
+        e.propstats.add(e1);
+        result.responses.add(e);
+        assertThat(SvnMerkleizer.pluckVersion(result))
+                .isEqualTo(33);
+
     }
 
     @Test
