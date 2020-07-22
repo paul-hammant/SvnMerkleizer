@@ -63,7 +63,7 @@ public class SvnMerkleizer {
     private final static XStream directoryXmlSerializer;
     private DB mapDBcache;
     private String cacheFilePath;
-    private final OkHttpClient okHttpClient;
+    private final OkHttpClient okHttpClient = new OkHttpClient();
 
     static {
         directoryXmlSerializer = new XStream();
@@ -82,9 +82,7 @@ public class SvnMerkleizer {
     }
 
     public SvnMerkleizer(String delegateToUrl, String contextDir,
-                         Metrics metrics, String cacheFilePath,
-                         final OkHttpClient okHttpClient) {
-        this.okHttpClient = okHttpClient;
+                         Metrics metrics, String cacheFilePath) {
         this.delegateToUrl = delegateToUrl;
         this.contextDir = contextDir;
         if (cacheFilePath != null && !cacheFilePath.equals("")) {

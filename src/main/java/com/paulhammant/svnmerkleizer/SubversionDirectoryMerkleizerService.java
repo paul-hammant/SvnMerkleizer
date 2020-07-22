@@ -30,7 +30,6 @@
 */
 package com.paulhammant.svnmerkleizer;
 
-import okhttp3.OkHttpClient;
 import org.jooby.Jooby;
 import org.jooby.Mutant;
 import org.jooby.Request;
@@ -134,7 +133,7 @@ public abstract class SubversionDirectoryMerkleizerService extends Jooby {
     public static class ViaHiddenGetRoutes extends SubversionDirectoryMerkleizerService {
 
         public ViaHiddenGetRoutes(String delegateToUrl, String contextDir, SvnMerkleizer.Metrics metrics,
-                                  SvnMerkleizer svnMerkleizer, int port, final OkHttpClient okHttpClient) {
+                                  SvnMerkleizer svnMerkleizer, int port) {
             super(svnMerkleizer);
 
             //        Logger.getLogger(OkHttpClient.class.getName()).setLevel(Level.FINE);

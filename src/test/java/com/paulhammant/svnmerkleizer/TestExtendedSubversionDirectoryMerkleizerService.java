@@ -34,7 +34,6 @@ package com.paulhammant.svnmerkleizer;
 import com.paulhammant.svnmerkleizer.boot.ViaCustomMethodOnDirectory;
 import com.paulhammant.svnmerkleizer.pojos.Directory;
 import com.paulhammant.svnmerkleizer.pojos.VersionInfo;
-import okhttp3.OkHttpClient;
 import org.jooby.Request;
 import org.jooby.RequestLogger;
 import org.jooby.Response;
@@ -78,7 +77,7 @@ public class TestExtendedSubversionDirectoryMerkleizerService {
         public SubversionDirectoryMerkleizerServiceViaCustomMethodOnDirectory() {
             super("TESTING-CUSTOM-METHOD",
                     "http://localhost:8098/svn/dataset/",
-                    "merkle", "merkleizer.db", new SvnMerkleizer.Metrics.Console(), 8080, new OkHttpClient());
+                    "merkle", "merkleizer.db", new SvnMerkleizer.Metrics.Console(), 8080);
             use("*", new RequestLogger().log(line -> {
                 // nothing so far;
             }));
@@ -179,13 +178,13 @@ public class TestExtendedSubversionDirectoryMerkleizerService {
         private SvnMerkleizer svnMerkleizerForTesting;
 
         public SubversionDirectoryMerkleizerServiceViaHiddenGetRoutes(String delegateToUrl, String contextDir, SvnMerkleizer.Metrics metrics, HashMap<Integer, Integer> revCounts, int port) {
-            super(delegateToUrl, contextDir, metrics, null, port, new OkHttpClient());
+            super(delegateToUrl, contextDir, metrics, null, port);
 
             // hack for testing
             try {
-                Field smf = SubversionDirectoryMerkleizerService.class.getDeclaredField("svnMerkleizer");
-                smf.setAccessible(true);
-                svnMerkleizerForTesting = new SvnMerkleizer(delegateToUrl, contextDir, metrics, "merkleizer.db", new OkHttpClient()) {
+                Field svnMerkleizerField = SubversionDirectoryMerkleizerService.class.getDeclaredField("svnMerkleizer");
+                svnMerkleizerField.setAccessible(true);
+                svnMerkleizerForTesting = new SvnMerkleizer(delegateToUrl, contextDir, metrics, "merkleizer.db") {
                     @Override
                     public void cacheMiss(String cacheKey) {
                         cacheMiss++;
@@ -202,7 +201,7 @@ public class TestExtendedSubversionDirectoryMerkleizerService {
                         revCounts.merge(rvn, 1, (a, b) -> a + b);
                     }
                 };
-                smf.set(this, svnMerkleizerForTesting);
+                svnMerkleizerField.set(this, svnMerkleizerForTesting);
             } catch (NoSuchFieldException | IllegalAccessException e) {
                 throw new UnsupportedOperationException("not expecting reflection to fail here");
             }

@@ -2,7 +2,6 @@ package com.paulhammant.svnmerkleizer.boot;
 
 import com.paulhammant.svnmerkleizer.SubversionDirectoryMerkleizerService;
 import com.paulhammant.svnmerkleizer.SvnMerkleizer;
-import okhttp3.OkHttpClient;
 import org.jooby.Mutant;
 import org.jooby.Request;
 import org.jooby.Response;
@@ -10,8 +9,8 @@ import org.jooby.Response;
 public class ViaCustomMethodOnDirectory extends SubversionDirectoryMerkleizerService {
 
     public ViaCustomMethodOnDirectory(String method, String delegateToUrl, String contextDir, String cacheFilePath,
-                                      SvnMerkleizer.Metrics metrics, int port, final OkHttpClient okHttpClient) {
-        super(new SvnMerkleizer(delegateToUrl, contextDir, metrics, cacheFilePath, okHttpClient));
+                                      SvnMerkleizer.Metrics metrics, int port) {
+        super(new SvnMerkleizer(delegateToUrl, contextDir, metrics, cacheFilePath));
 
         use(method, "**/", (req, rsp) -> {
             port(port);

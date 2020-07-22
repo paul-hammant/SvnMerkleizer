@@ -1,7 +1,6 @@
 package com.paulhammant.svnmerkleizer.boot;
 
 import com.paulhammant.svnmerkleizer.SvnMerkleizer;
-import okhttp3.OkHttpClient;
 
 public class ViaCustomMethodOnDirectoryAndSystemProperties {
 
@@ -13,8 +12,7 @@ public class ViaCustomMethodOnDirectoryAndSystemProperties {
         final String method = System.getProperty("SvnMerkleizerMethod");
         new ViaCustomMethodOnDirectory(method,
                 delegateTo, contextDir, cacheFilePath,
-                new SvnMerkleizer.Metrics.NullObject(), Integer.parseInt(port),
-                new OkHttpClient()
+                new SvnMerkleizer.Metrics.NullObject(), Integer.parseInt(port)
         ).start(args);
     }
 }
