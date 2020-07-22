@@ -105,7 +105,7 @@ public class DirectServiceTests {
             countsJournal.add(counts);
         };
         new File("merkleizer.db").delete();
-        merkleizerService = new TestExtendedSubversionDirectoryMerkleizerService.SubversionDirectoryMerkleizerServiceViaHiddenGetRoutes(
+        merkleizerService = new TestExtendedSubversionDirectoryMerkleizerService.ViaHiddenGetRoutes(
                 "http://localhost:8098/svn/dataset/", "abc123", metrics,
                 new HashMap<>(), PORT);
         long start = System.currentTimeMillis();

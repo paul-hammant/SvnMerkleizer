@@ -135,7 +135,7 @@ public class PlayingBackSubversionServiceTests {
         servirtiumServer.start();
 
         new File("merkleizer.db").delete();
-        merkleizerService = new TestExtendedSubversionDirectoryMerkleizerService.SubversionDirectoryMerkleizerServiceViaHiddenGetRoutes(
+        merkleizerService = new TestExtendedSubversionDirectoryMerkleizerService.ViaHiddenGetRoutes(
                 "http://localhost:8198/abc123/", "abc123", metrics,
                 new HashMap<>(), PORT);
         long start = System.currentTimeMillis();

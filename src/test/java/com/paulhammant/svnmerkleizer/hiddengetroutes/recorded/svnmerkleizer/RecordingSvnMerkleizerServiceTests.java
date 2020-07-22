@@ -131,7 +131,7 @@ public class RecordingSvnMerkleizerServiceTests {
         servirtiumServer.start();
 
         new File("merkleizer.db").delete();
-        merkleizerService = new TestExtendedSubversionDirectoryMerkleizerService.SubversionDirectoryMerkleizerServiceViaHiddenGetRoutes(
+        merkleizerService = new TestExtendedSubversionDirectoryMerkleizerService.ViaHiddenGetRoutes(
                 "http://localhost:8098/svn/dataset/", "abc123", metrics, new HashMap<>(), 8080);
         long start = System.currentTimeMillis();
         merkleizerService.start("server.join=false");

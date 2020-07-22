@@ -31,7 +31,6 @@
 
 package com.paulhammant.svnmerkleizer;
 
-import com.paulhammant.svnmerkleizer.boot.ViaCustomMethodOnDirectory;
 import com.paulhammant.svnmerkleizer.pojos.Directory;
 import com.paulhammant.svnmerkleizer.pojos.VersionInfo;
 import org.jooby.Request;
@@ -67,14 +66,14 @@ public class TestExtendedSubversionDirectoryMerkleizerService {
         void deleteCacheKeys();
     }
 
-    public static class SubversionDirectoryMerkleizerServiceViaCustomMethodOnDirectory
-            extends ViaCustomMethodOnDirectory
+    public static class ViaCustomHttpMethodOnDirectory
+            extends com.paulhammant.svnmerkleizer.boot.ViaCustomMethodOnDirectory
             implements TestingSubversionDirectoryMerkleizerService {
 
         private boolean started;
         private boolean stopped;
 
-        public SubversionDirectoryMerkleizerServiceViaCustomMethodOnDirectory() {
+        public ViaCustomHttpMethodOnDirectory() {
             super("TESTING-CUSTOM-METHOD",
                     "http://localhost:8098/svn/dataset/",
                     "merkle", "merkleizer.db", new SvnMerkleizer.Metrics.Console(), 8080);
@@ -163,7 +162,7 @@ public class TestExtendedSubversionDirectoryMerkleizerService {
 
     }
 
-    public static class SubversionDirectoryMerkleizerServiceViaHiddenGetRoutes
+    public static class ViaHiddenGetRoutes
             extends SubversionDirectoryMerkleizerService.ViaHiddenGetRoutes
             implements TestingSubversionDirectoryMerkleizerService {
 
@@ -177,14 +176,14 @@ public class TestExtendedSubversionDirectoryMerkleizerService {
 
         private SvnMerkleizer svnMerkleizerForTesting;
 
-        public SubversionDirectoryMerkleizerServiceViaHiddenGetRoutes(String delegateToUrl, String contextDir, SvnMerkleizer.Metrics metrics, HashMap<Integer, Integer> revCounts, int port) {
-            super(delegateToUrl, contextDir, metrics, null, port);
+        public ViaHiddenGetRoutes(String delegateToSvnUrl, String contextDir, SvnMerkleizer.Metrics metrics, HashMap<Integer, Integer> revCounts, int port) {
+            super(delegateToSvnUrl, contextDir, metrics, null, port);
 
             // hack for testing
             try {
                 Field svnMerkleizerField = SubversionDirectoryMerkleizerService.class.getDeclaredField("svnMerkleizer");
                 svnMerkleizerField.setAccessible(true);
-                svnMerkleizerForTesting = new SvnMerkleizer(delegateToUrl, contextDir, metrics, "merkleizer.db") {
+                svnMerkleizerForTesting = new SvnMerkleizer(delegateToSvnUrl, contextDir, metrics, "merkleizer.db") {
                     @Override
                     public void cacheMiss(String cacheKey) {
                         cacheMiss++;

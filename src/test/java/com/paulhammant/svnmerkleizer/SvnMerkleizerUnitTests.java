@@ -44,7 +44,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 
-public class SubversionMerkleizerUnitTests {
+public class SvnMerkleizerUnitTests {
 
     @Test
     public void emptyListShouldNotMakeCSV() {

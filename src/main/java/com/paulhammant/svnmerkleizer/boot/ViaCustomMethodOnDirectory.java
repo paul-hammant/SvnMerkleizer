@@ -8,9 +8,9 @@ import org.jooby.Response;
 
 public class ViaCustomMethodOnDirectory extends SubversionDirectoryMerkleizerService {
 
-    public ViaCustomMethodOnDirectory(String method, String delegateToUrl, String contextDir, String cacheFilePath,
+    public ViaCustomMethodOnDirectory(String method, String delegateToSvnUrl, String contextDir, String cacheFilePath,
                                       SvnMerkleizer.Metrics metrics, int port) {
-        super(new SvnMerkleizer(delegateToUrl, contextDir, metrics, cacheFilePath));
+        super(new SvnMerkleizer(delegateToSvnUrl, contextDir, metrics, cacheFilePath));
 
         use(method, "**/", (req, rsp) -> {
             port(port);

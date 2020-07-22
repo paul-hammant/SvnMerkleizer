@@ -54,7 +54,7 @@ public class SvnMerkleizer {
     public static final HashFunction SHA_1 = Hashing.sha1();
     public static final int LENGTH_HTTP_INTRODUCER = "http://x".length();
 
-    private final String delegateToUrl;
+    private final String delegateToSvnUrl;
     private final String contextDir;
     private final ConcurrentMap<String, VersionInfo> cache;
     private final Metrics metrics;
@@ -81,9 +81,9 @@ public class SvnMerkleizer {
         JACKSON_OBJECT_MAPPER.getTypeFactory().constructCollectionType(ArrayList.class, Directory.class);
     }
 
-    public SvnMerkleizer(String delegateToUrl, String contextDir,
+    public SvnMerkleizer(String delegateToSvnUrl, String contextDir,
                          Metrics metrics, String cacheFilePath) {
-        this.delegateToUrl = delegateToUrl;
+        this.delegateToSvnUrl = delegateToSvnUrl;
         this.contextDir = contextDir;
         if (cacheFilePath != null && !cacheFilePath.equals("")) {
             this.cacheFilePath = cacheFilePath;
@@ -178,7 +178,7 @@ public class SvnMerkleizer {
                                                  String path, String authorization)
             throws IOException, NotFound404 {
         long start = System.currentTimeMillis();
-        String url = destinationUrl(path, delegateToUrl, contextDir);
+        String url = destinationUrl(path, delegateToSvnUrl, contextDir);
         String serverPart = url.substring(0, url.indexOf("/", LENGTH_HTTP_INTRODUCER));
         String pathPart = url.substring(url.indexOf("/", LENGTH_HTTP_INTRODUCER));
         Counts counts = new Counts();
@@ -274,10 +274,10 @@ public class SvnMerkleizer {
     private Items getItems(String user,
                            XStream svnXmlConverter,
                            ConcurrentMap<String, VersionInfo> cache,
-                           String delegateToUrl, String pathPart,
+                           String delegateToSvnUrl, String pathPart,
                            String authorization, boolean sha1Only, Counts counts) throws IOException, NotFound404 {
 
-        final SvnResponse response = getPROPFINDDirlist(authorization, delegateToUrl + pathPart, counts);
+        final SvnResponse response = getPROPFINDDirlist(authorization, delegateToSvnUrl + pathPart, counts);
         if (response.statusCode() < 200 || response.statusCode() > 299) {
             response.close();
             return Items.notSuccessful(response.statusCode());
@@ -295,7 +295,7 @@ public class SvnMerkleizer {
         try {
             multiStatus = (PropfindSvnResult) svnXmlConverter.fromXML(xml);
         } catch (XStreamException e) {
-            throw new UnsupportedOperationException("XStream could not deserialize URL " + delegateToUrl + pathPart + " payload: " + xml, e);
+            throw new UnsupportedOperationException("XStream could not deserialize URL " + delegateToSvnUrl + pathPart + " payload: " + xml, e);
 
         }
         final String baselineRelativePath = pluckBaselineRelativePath(multiStatus);
@@ -315,7 +315,7 @@ public class SvnMerkleizer {
             if (versionInfo != null) {
                 if (versionInfo.xmlHashCode == xmlHashCode) {
                     // costly, but can't be avoided before doing the cache lookup.
-                    currSvnRevision = getSvnRevision(delegateToUrl, pathPart, authorization, svnXmlConverter, svnRoot, counts);
+                    currSvnRevision = getSvnRevision(delegateToSvnUrl, pathPart, authorization, svnXmlConverter, svnRoot, counts);
                     if (versionInfo.svnRevision == currSvnRevision) {
                         cacheHit(cacheKey);
                         return Items.hereItIs(Directory.versionInfoAndSha1Only(versionInfo));
@@ -326,14 +326,14 @@ public class SvnMerkleizer {
         }
 
         if (currSvnRevision == -1) {
-            currSvnRevision = getSvnRevision(delegateToUrl, pathPart, authorization, svnXmlConverter, svnRoot, counts);
+            currSvnRevision = getSvnRevision(delegateToSvnUrl, pathPart, authorization, svnXmlConverter, svnRoot, counts);
         }
 
         // Recursion into directories here (potentially very costly)
         for (int i = 0; i < directory.contents.size(); i++) {
             Entry entry = directory.contents.get(i);
             if (entry.isDirWithNoSha1()) {
-                Items items = getItems(user, svnXmlConverter, cache, delegateToUrl, pathPart + entry.dir + "/", authorization, true, counts);
+                Items items = getItems(user, svnXmlConverter, cache, delegateToSvnUrl, pathPart + entry.dir + "/", authorization, true, counts);
                 if (items.dir == null) {
                     return items;
                 }
@@ -354,11 +354,11 @@ public class SvnMerkleizer {
     public void cacheHit(String cacheKey) {
     }
 
-    protected String destinationUrl(String path, String delegateToUrl, String contextDir) {
+    protected String destinationUrl(String path, String delegateToSvnUrl, String contextDir) {
         if (contextDir.equals("")) {
-            path = delegateToUrl + path;
+            path = delegateToSvnUrl + path;
         } else {
-            path = path.replace("/" + contextDir + "/", delegateToUrl);
+            path = path.replace("/" + contextDir + "/", delegateToSvnUrl);
         }
         return path.substring(0, path.lastIndexOf('/')) + "/";
     }
@@ -397,10 +397,10 @@ public class SvnMerkleizer {
         throw new RuntimeException("No version number found");
     }
 
-    private int getSvnRevision(String delegateToUrl, String pathPart, String authorization, XStream svnXmlConverter, String svnRoot, Counts counts) throws IOException {
+    private int getSvnRevision(String delegateToSvnUrl, String pathPart, String authorization, XStream svnXmlConverter, String svnRoot, Counts counts) throws IOException {
 
-        String youngestRev = getYoungestRevisionViaOPTIONS(authorization, delegateToUrl + pathPart, counts);
-        String url = (delegateToUrl + svnRoot + "!svn/rvr/" + youngestRev + "/" + pathPart.substring(svnRoot.length())).replace("//","/");
+        String youngestRev = getYoungestRevisionViaOPTIONS(authorization, delegateToSvnUrl + pathPart, counts);
+        String url = (delegateToSvnUrl + svnRoot + "!svn/rvr/" + youngestRev + "/" + pathPart.substring(svnRoot.length())).replace("//","/");
         SvnResponse response = getPROPFINDItemOnly(authorization, url, counts);
         PropfindSvnResult propfindSvnResult = (PropfindSvnResult) svnXmlConverter.fromXML(eliminateNamespaces(response.body()));
         if (response.statusCode() != 207) {

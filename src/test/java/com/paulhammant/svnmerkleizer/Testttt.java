@@ -90,7 +90,7 @@ public class Testttt {
     public void decentDemoOfAllTheConcepts() throws Exception {
 
         new File("merkleizer.db").delete();
-        TestExtendedSubversionDirectoryMerkleizerService.SubversionDirectoryMerkleizerServiceViaHiddenGetRoutes svnMerkelizer = new TestExtendedSubversionDirectoryMerkleizerService.SubversionDirectoryMerkleizerServiceViaHiddenGetRoutes(
+        TestExtendedSubversionDirectoryMerkleizerService.ViaHiddenGetRoutes svnMerkelizer = new TestExtendedSubversionDirectoryMerkleizerService.ViaHiddenGetRoutes(
                 "http://localhost:8098/svn/dataset/", "abc123", new SvnMerkleizer.Metrics.Console(), new HashMap<Integer, Integer>(), 8080);
 
         svnMerkelizer.start("server.join=false");

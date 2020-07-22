@@ -132,7 +132,7 @@ public abstract class SubversionDirectoryMerkleizerService extends Jooby {
 
     public static class ViaHiddenGetRoutes extends SubversionDirectoryMerkleizerService {
 
-        public ViaHiddenGetRoutes(String delegateToUrl, String contextDir, SvnMerkleizer.Metrics metrics,
+        public ViaHiddenGetRoutes(String delegateToSvnUrl, String contextDir, SvnMerkleizer.Metrics metrics,
                                   SvnMerkleizer svnMerkleizer, int port) {
             super(svnMerkleizer);
 

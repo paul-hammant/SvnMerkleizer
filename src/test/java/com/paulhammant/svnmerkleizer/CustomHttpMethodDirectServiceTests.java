@@ -52,7 +52,7 @@ public class CustomHttpMethodDirectServiceTests {
     @Before
     public void setup() {
         new File("merkleizer.db").delete();
-        merkleizerService = new TestExtendedSubversionDirectoryMerkleizerService.SubversionDirectoryMerkleizerServiceViaCustomMethodOnDirectory();
+        merkleizerService = new TestExtendedSubversionDirectoryMerkleizerService.ViaCustomHttpMethodOnDirectory();
         startTestApp();
     }
 
