@@ -93,7 +93,7 @@ public abstract class SubversionDirectoryMerkleizerService extends Jooby {
 
     protected void txt(XStream svnXmlConverter, Request req, Response rsp) throws Throwable {
         doJoobyResponse(rsp, svnMerkleizer.doDirectoryList(svnXmlConverter,
-                dir -> dir.sha1 + "\n" + svnMerkleizer.toTXT(dir.contents), "text/plain", req.path(), getAuthorization(req)
+                dir -> dir.sha1 + "\n" + svnMerkleizer.toText(dir.contents), "text/plain", req.path(), getAuthorization(req)
         ));
     }
 
@@ -106,7 +106,7 @@ public abstract class SubversionDirectoryMerkleizerService extends Jooby {
 
     protected void json(XStream svnXmlConverter, Request req, Response rsp) throws Throwable {
         doJoobyResponse(rsp, svnMerkleizer.doDirectoryList(svnXmlConverter,
-                dir -> svnMerkleizer.writePrettyJson(dir), "application/json", req.path(), getAuthorization(req)
+                dir -> svnMerkleizer.toPrettyJson(dir), "application/json", req.path(), getAuthorization(req)
         ));
     }
 

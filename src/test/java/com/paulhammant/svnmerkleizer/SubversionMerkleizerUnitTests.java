@@ -34,6 +34,7 @@ package com.paulhammant.svnmerkleizer;
 import com.cedarsoftware.util.DeepEquals;
 import com.paulhammant.svnmerkleizer.pojos.*;
 import com.thoughtworks.xstream.XStream;
+import org.jetbrains.annotations.NotNull;
 import org.junit.Test;
 
 import java.util.ArrayList;
@@ -59,11 +60,56 @@ public class SubversionMerkleizerUnitTests {
 
     @Test
     public void simplelistShouldHaveCsv() {
+        assertThat(SvnMerkleizer.toCSV(makeTwo()))
+                .isEqualTo(("ddd/,ssshhaa11\nfff,syda87sf8e6w"));
+    }
+
+    @Test
+    public void simplelistShouldHaveHtml() {
+        Directory dir = new Directory();
+        dir.contents = makeTwo();
+        dir.sha1 = "mockSha1";
+        assertThat(SvnMerkleizer.toHtml(dir))
+                .isEqualTo(("<html><body>\n" +
+                        "<p>mockSha1</p>\n" +
+                        "<table>\n" +
+                        "<tr><td><a href=\"ddd/.merkle.html\">ddd</a></td><td>ssshhaa11</td></tr>\n" +
+                        "<tr><td>fff</td><td>syda87sf8e6w</td></tr>\n" +
+                        "</table></body></html>"));
+    }
+
+    @Test
+    public void simplelistShouldHaveText() {
+        assertThat(SvnMerkleizer.toText(makeTwo()))
+                .isEqualTo("ddd/ ssshhaa11\n" +
+                        "fff syda87sf8e6w");
+    }
+
+    @Test
+    public void simplelistShouldHaveJson() {
+        Directory dir = new Directory();
+        dir.contents = makeTwo();
+        dir.sha1 = "mockSha1";
+
+        assertThat(SvnMerkleizer.toPrettyJson(dir))
+                .isEqualTo("{\n" +
+                        "  \"sha1\" : \"mockSha1\",\n" +
+                        "  \"contents\" : [ {\n" +
+                        "    \"dir\" : \"ddd\",\n" +
+                        "    \"sha1\" : \"ssshhaa11\"\n" +
+                        "  }, {\n" +
+                        "    \"file\" : \"fff\",\n" +
+                        "    \"sha1\" : \"syda87sf8e6w\"\n" +
+                        "  } ]\n" +
+                        "}");
+    }
+
+    @NotNull
+    private static List<Entry> makeTwo() {
         List<Entry> list = new ArrayList<>();
         list.add(Entry.dir("ddd", "ssshhaa11"));
         list.add(Entry.file("fff", "syda87sf8e6w"));
-        assertThat(SvnMerkleizer.toCSV(list))
-                .isEqualTo(("ddd/,ssshhaa11\nfff,syda87sf8e6w"));
+        return list;
     }
 
     @Test

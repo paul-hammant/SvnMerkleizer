@@ -36,12 +36,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.common.base.Charsets;
 import com.google.common.hash.HashFunction;
 import com.google.common.hash.Hashing;
-import com.paulhammant.svnmerkleizer.pojos.DPropstat;
-import com.paulhammant.svnmerkleizer.pojos.DResponse;
-import com.paulhammant.svnmerkleizer.pojos.Directory;
-import com.paulhammant.svnmerkleizer.pojos.Entry;
-import com.paulhammant.svnmerkleizer.pojos.PropfindSvnResult;
-import com.paulhammant.svnmerkleizer.pojos.VersionInfo;
+import com.paulhammant.svnmerkleizer.pojos.*;
 import com.thoughtworks.xstream.XStream;
 import com.thoughtworks.xstream.XStreamException;
 import okhttp3.Headers;
@@ -54,12 +49,7 @@ import org.mapdb.Serializer;
 
 import java.io.IOException;
 import java.nio.file.Paths;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Base64;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.concurrent.ConcurrentMap;
 
 public class SvnMerkleizer {
@@ -71,10 +61,15 @@ public class SvnMerkleizer {
     private final String contextDir;
     private final ConcurrentMap<String, VersionInfo> cache;
     private final Metrics metrics;
-    private final ObjectMapper om;
+    private final static ObjectMapper JACKSON_OBJECT_MAPPER = new ObjectMapper();
     private DB mapDBcache;
     private String cacheFilePath;
     private final OkHttpClient okHttpClient;
+
+    static {
+        JACKSON_OBJECT_MAPPER.setSerializationInclusion(JsonInclude.Include.NON_NULL);
+        JACKSON_OBJECT_MAPPER.getTypeFactory().constructCollectionType(ArrayList.class, Directory.class);
+    }
 
     public SvnMerkleizer(String delegateToUrl, String contextDir,
                          Metrics metrics, String cacheFilePath,
@@ -89,9 +84,7 @@ public class SvnMerkleizer {
         }
         this.cache = initializeDB();
         this.metrics = metrics;
-        om = new ObjectMapper();
-        om.setSerializationInclusion(JsonInclude.Include.NON_NULL);
-        om.getTypeFactory().constructCollectionType(ArrayList.class, Directory.class);
+
     }
 
 
@@ -237,6 +230,35 @@ public class SvnMerkleizer {
         sb.append("</table></body></html>");
         return sb.toString();
     }
+
+    /**
+     * The toTXT operation is important for SHA1 calculation as it
+     * can be replicated on the client side quite easily.
+     */
+    static String toText(List<Entry> entries) {
+        String[] stringified = new String[entries.size()];
+        for (int i = 0; i < entries.size(); i++) {
+            Entry entry = entries.get(i);
+            String name;
+            if (entry.file == null) {
+                name = entry.dir + "/";
+            } else {
+                name = entry.file;
+            }
+            stringified[i] = name + " " + entry.sha1;
+        }
+        Arrays.sort(stringified);
+        return String.join("\n", stringified);
+    }
+
+    static String toPrettyJson(Directory dir) {
+        try {
+            return JACKSON_OBJECT_MAPPER.writerWithDefaultPrettyPrinter().writeValueAsString(dir);
+        } catch (JsonProcessingException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
 
     private Items getItems(String user,
                            XStream svnXmlConverter,
@@ -447,7 +469,7 @@ public class SvnMerkleizer {
     }
 
     private String calcSHA1forItems(List<Entry> entries) {
-        return SHA_1.hashString(toTXT(entries), Charsets.UTF_8).toString().intern();
+        return SHA_1.hashString(toText(entries), Charsets.UTF_8).toString().intern();
     }
 
     static Directory flattenToItems(PropfindSvnResult multiStatus) {
@@ -489,35 +511,6 @@ public class SvnMerkleizer {
         return directory;
     }
 
-
-    String writePrettyJson(Directory dir) {
-        try {
-            return om.writerWithDefaultPrettyPrinter().writeValueAsString(dir);
-        } catch (JsonProcessingException e) {
-            throw new RuntimeException(e);
-        }
-    }
-
-
-    /**
-     * The toTXT operation is important for SHA1 calculation as it
-     * can be replicated on the client side quite easily.
-     */
-    String toTXT(List<Entry> entries) {
-        String[] stringified = new String[entries.size()];
-        for (int i = 0; i < entries.size(); i++) {
-            Entry entry = entries.get(i);
-            String name;
-            if (entry.file == null) {
-                name = entry.dir + "/";
-            } else {
-                name = entry.file;
-            }
-            stringified[i] = name + " " + entry.sha1;
-        }
-        Arrays.sort(stringified);
-        return String.join("\n", stringified);
-    }
 
     void makeVersionInfoForPath(int xmlHashCode, Directory directory, int rvn, String pathPart) {
         directory.versionInfo = new VersionInfo();
